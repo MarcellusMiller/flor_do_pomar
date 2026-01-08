@@ -1,6 +1,5 @@
 import { Router } from "express";
-import { Request, Response } from "express";
-import  RegisterController  from "./controller/registerController.js";
+import messageController from "./controller/messagesController.js";
 
 const router = Router();
 
@@ -12,6 +11,6 @@ router.get("/", (req, res) => {
 });
 
 // rotas da api
-router.post("/register", new RegisterController().handle);
+router.post("/message", messageController.createMessage);
 
 export default router;
