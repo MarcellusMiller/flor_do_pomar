@@ -7,11 +7,11 @@ interface createMessageDTO {
     email: string;
     phone: string;
     message : string;
-    
-    // send_time : Date;
-    
+    // isOpen : boolean;
+    send_time : Date;
+
     // Optional fields
-    type_of_event? : "casamento" | "aniversario" | "formatura" | "batizado";
+    type_of_event : "casamento" | "aniversario" | "formatura" | "batizado";
     id? : UUID;
     localEvent? : string;
     dateOfEvent? : Date;
