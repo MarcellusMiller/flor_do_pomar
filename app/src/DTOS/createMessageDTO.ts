@@ -1,13 +1,13 @@
 import { UUID } from "crypto";
 
 interface createMessageDTO {
-    type: "Curação" | "planejamento";
+    type: "curation" | "planning";
    
     senderName : string;
     email: string;
     phone: string;
     message : string;
-    // isOpen : boolean;
+    isOpen : boolean;
     send_time : Date;
 
     // Optional fields

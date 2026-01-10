@@ -1,37 +1,32 @@
 import { Request, Response } from "express";
+import messageCuration from "../services/messages/createCurationService.js";
 class messageController{
     async createMessage(req: Request, res: Response){
+        // captura do json enviado pelo cliente
         const body = req.body;
+        // uso do try para tratar erros
         try {
+            // validação dos dados obrigatórios
             if(!body || !body.senderName || !body.email || !body.phone || !body.type || !body.message || !body.type_of_event){ 
                 return res.status(400).json({message: "Dados incompletos"});
-            } else {
-                if(body.type === "curação"){
-                // Lógica para mensagens do tipo "curação"
-
-                // Garante que o local do evento e a data do evento sejam fornecidos
-                if(!body.localOfEvent || !body.dateOfEvent) {
-                    return res.status(400).json({message: "Dados incompletos para mensagem de curação"});
-                } else {
-                    
-                    const date = new Date();
-
-                    body.sendTime = date.toLocaleString("pt-PT", {
-                    day: "2-digit",
-                    month: "2-digit",
-                    year: "numeric",
-                    hour: "2-digit",
-                    minute: "2-digit",
+            } 
+            // logica para criação de mensagem de curadoria
+            else if(body.type === "curation"){
+                const service = new messageCuration();
+                const result = await service.createMessage(body)
+                
+                
+                return res.status(201).json({
+                    message: "Mensagem de curadoria criada com sucesso", 
+                    data: result
                 });
-
-                    console.log(body);
-                    return res.status(200).json({ message: "Mensagem recebida com sucesso" });
-                }
-                }
-            }
+            } 
+            // to do para mensagem de tipo planing
             
-        } catch (error) {
-            return res.status(500).json({message: "Erro no servidor"});
+            
+        } catch (error:any) {
+
+            return res.status(500).json({message: error.message});
         }
 }
 }
