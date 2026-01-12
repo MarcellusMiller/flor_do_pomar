@@ -1,4 +1,4 @@
-import { pool } from "../services/DBconn.js";
+import { pool } from "../DB/DBconn.js";
 
 async function testDatabase() {
   try {

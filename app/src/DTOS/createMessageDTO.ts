@@ -9,12 +9,17 @@ interface createMessageDTO {
     message : string;
     isOpen : boolean;
     send_time : Date;
-
-    // Optional fields
     type_of_event : "casamento" | "aniversario" | "formatura" | "batizado";
-    id? : UUID;
+    id : UUID;
+    // Campos opcionais 
+    
     localEvent? : string;
     dateOfEvent? : Date;
+
+    // criarei mais tarde
+    numberOfGuests? : number;
+    budget? : string;
+    ideas? : string;
     image? : string;
 
 }

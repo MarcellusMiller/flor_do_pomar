@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import messageCuration from "../services/messages/createCurationService.js";
+import messagePlanning from "../services/messages/createPlaningService.js";
 class messageController{
     async createMessage(req: Request, res: Response){
         // captura do json enviado pelo cliente
@@ -22,8 +23,14 @@ class messageController{
                 });
             } 
             // to do para mensagem de tipo planing
+            else if(body.type === "planning"){
+                const service = new messagePlanning();
+                const result = await service.createMessage(body);
             
-            
+                return res.status(201).json({
+                    message: "Mensagem de planejamento criada com sucesso",
+                    data: result });
+            }
         } catch (error:any) {
 
             return res.status(500).json({message: error.message});
