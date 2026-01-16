@@ -1,7 +1,7 @@
-import dateService from "../../utils/dateService.js";
 import createMessageDTO from "../../DTOS/createMessageDTO.js";
 import messageServiceInterface from "../../interfaces/messageServiceInterface.js";
-import { randomUUID } from "crypto";
+import CurationRepository from "../../DB/repository/curationRepository.js";
+
 
 class messageCuration implements messageServiceInterface {
     async createMessage(message: createMessageDTO): Promise<createMessageDTO> {
@@ -12,13 +12,10 @@ class messageCuration implements messageServiceInterface {
             if(!message.localEvent || !message.dateOfEvent || !message.type_of_event) {
                 throw new Error("Dados incompletos para mensagem de curação");
             }
-            // Lógica para criar mensagem de curação
-            message.send_time = dateService.now();
-            // id da mensagem
-            message.id = randomUUID();
-            // se a mensagem foi aberta
-            message.isOpen = false;
-            return message
+            // chamada ao repositório para salvar a mensagem de curação
+            const savadMessage = await new CurationRepository().InsertCurationMessage(message);
+            // retorna a mensagem salva
+            return savadMessage;
             
         } catch (error) {
             throw new Error("Erro ao criar mensagem de curação: " + error);
