@@ -1,0 +1,14 @@
+import { up } from "./001_create_message_table.js";
+
+(async () => {
+    try {
+        console.log("Running migrations...");
+        await up();
+        console.log("Migrations completed successfully.");
+        process.exit(0);
+    }
+    catch (error) {
+        console.error("Migration failed:", error);
+        process.exit(1);
+    }
+})();

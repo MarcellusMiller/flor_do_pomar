@@ -6,6 +6,7 @@ const PORT = process.env.PORT || 3000;
 // função que começa o servidor
 // posteriormente ela sera asincrona
 function startServer() {
+    
     // app escutando a porta
     app.listen(PORT, () => {
     console.log("server running")

@@ -1,15 +1,39 @@
 import { Request, Response } from "express";
+import messageCuration from "../services/messages/createCurationService.js";
+import messagePlanning from "../services/messages/createPlaningService.js";
 class messageController{
     async createMessage(req: Request, res: Response){
+        // captura do json enviado pelo cliente
         const body = req.body;
+        // uso do try para tratar erros
         try {
-            if(!body || !body.senderName || !body.email || !body.phone || !body.type || !body.message){ 
+            // validação dos dados obrigatórios
+            if(!body || !body.senderName || !body.email || !body.phone || !body.type || !body.message || !body.type_of_event){ 
                 return res.status(400).json({message: "Dados incompletos"});
-            } else {
-                return res.status(200).json({message: "Mensagem recebida com sucesso"});
+            } 
+            // logica para criação de mensagem de curadoria
+            else if(body.type === "curation"){
+                const service = new messageCuration();
+                const result = await service.createMessage(body)
+                
+                
+                return res.status(201).json({
+                    message: "Mensagem de curadoria criada com sucesso", 
+                    data: result
+                });
+            } 
+            // to do para mensagem de tipo planing
+            else if(body.type === "planning"){
+                const service = new messagePlanning();
+                const result = await service.createMessage(body);
+            
+                return res.status(201).json({
+                    message: "Mensagem de planejamento criada com sucesso",
+                    data: result });
             }
-        } catch (error) {
-            return res.status(500).json({message: "Erro no servidor"});
+        } catch (error:any) {
+
+            return res.status(500).json({message: error.message});
         }
 }
 }
