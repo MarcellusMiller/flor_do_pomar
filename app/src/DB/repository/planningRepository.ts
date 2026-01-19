@@ -4,7 +4,7 @@ class planningRepository {
     async InsertPlanningMessage(message: createMessageDTO) {
         try {
             // query para inserir a mensagem de planejamento no banco de dados
-            const query = `INSERT INTO messages (type, sender_name, email, phone, message, type_of_event) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *; `;
+            const query = `INSERT INTO messages (type, sender_name, email, phone, message, type_of_event, image_path) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *; `;
             const values = [
                 message.type,
                 message.senderName,
@@ -12,6 +12,7 @@ class planningRepository {
                 message.phone,
                 message.message,
                 message.type_of_event,
+                message.image
             ]
             const { rows} = await pool.query(query, values);
             return rows[0];

@@ -1,5 +1,6 @@
 import { Router } from "express";
 import messageController from "./controller/messagesController.js";
+import uploadMiddleware from "./middleware/uploadMiddleware.js";
 
 const router = Router();
 
@@ -11,6 +12,9 @@ router.get("/", (req, res) => {
 });
 
 // rotas da api
-router.post("/message", messageController.createMessage);
+router.post("/message",
+    uploadMiddleware.single("image"),
+    messageController.createMessage
+);
 
 export default router;

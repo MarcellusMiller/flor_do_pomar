@@ -1,7 +1,7 @@
 version: "3.9"
 
 services:
-
+  
   postgres_test:
     image: postgres:16
     container_name: postgres_test
@@ -35,6 +35,8 @@ services:
       - .env
     depends_on:
       - postgres
+    volumes:
+      - ./images:/app/storage/images
 
   nginx:
     image: nginx:alpine
@@ -43,8 +45,11 @@ services:
       - "80:80"
     volumes:
       - ../nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./images:/app/storage/images
     depends_on:
       - flor_app
 
+
 volumes:
   pgdata:
+  
