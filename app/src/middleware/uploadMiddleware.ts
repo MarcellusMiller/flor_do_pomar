@@ -1,22 +1,20 @@
-import multer from 'multer';
-import path from 'path';
-import { randomUUID } from 'crypto';
-import fs from "fs";
+import multer from "multer";
+import path from "path";
+import { randomUUID } from "crypto";
+import { fileURLToPath } from "url";
 
-// diretorio onde as imagens serão salvas
-const uploadDir = path.join(__dirname, "../../images");
-// caso não exista o diretório, cria ele
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const storage = multer.diskStorage({
-    filefilter: (_, file, cb) => {
-        const allowed = ['image/webp', 'image/png', 'image/jpg'];
-        if(!allowed.includes(file.mimetype)) {
-            return cb(new Error('Tipo de arquivo inválido'));
-        }
-    }
-    cb(null, true);
     
- });
+  destination: (_, __, cb) => {
+    cb(null, path.join(__dirname, "../../images"));
+  },
+  filename: (_, file, cb) => {
+    const ext = path.extname(file.originalname);
+    cb(null, `${randomUUID()}${ext}`);
+  },
+});
+
+export const uploadMiddleware = multer({ storage });
