@@ -8,7 +8,6 @@
     "build": "tsc",
     "start": "node dist/server.js",
     "migrate": "node dist/DB/migrations/runMigrations.js",
-
     "test:db": "node dist/tests/db.test.js"
   },
   "keywords": [],
@@ -17,9 +16,13 @@
   "type": "module",
   "dependencies": {
     "@types/bcrypt": "^6.0.0",
+    "@types/mime": "^3.0.4",
+    "@types/multer": "^2.0.0",
     "bcrypt": "^6.0.0",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
+    "mime": "^4.1.0",
+    "multer": "^2.0.2",
     "pg": "^8.16.3"
   },
   "devDependencies": {

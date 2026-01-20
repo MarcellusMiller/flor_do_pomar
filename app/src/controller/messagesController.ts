@@ -3,10 +3,21 @@ import messageCuration from "../services/messages/createCurationService.js";
 import messagePlanning from "../services/messages/createPlaningService.js";
 class messageController{
     async createMessage(req: Request, res: Response){
-        // captura do json enviado pelo cliente
-        const body = req.body;
         // uso do try para tratar erros
         try {
+            // captura do json enviado pelo cliente
+            const body = { ...req.body }; // criando a garantia de um objeto com spread operator
+            const file = req.file; // imagem
+
+            // remover em produção
+            console.log(body)
+            console.log(file)
+
+            // checa se existe imagem
+            if(file) {
+                body.image = file.filename;
+                
+            }
             // validação dos dados obrigatórios
             if(!body || !body.senderName || !body.email || !body.phone || !body.type || !body.message || !body.type_of_event){ 
                 return res.status(400).json({message: "Dados incompletos"});

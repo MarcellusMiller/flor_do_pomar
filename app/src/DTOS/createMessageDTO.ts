@@ -10,12 +10,12 @@ interface createMessageDTO {
     
     localEvent? : string;
     dateOfEvent? : Date;
-
+    image? : string
     // criarei mais tarde
     numberOfGuests? : number;
     budget? : string;
     ideas? : string;
-    image? : string;
+
 
 }
 
