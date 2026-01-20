@@ -36,7 +36,7 @@ services:
     depends_on:
       - postgres
     volumes:
-      - ./images:/app/storage/images
+      - ./storage/images:/app/storage/images
 
   nginx:
     image: nginx:alpine
@@ -45,7 +45,7 @@ services:
       - "80:80"
     volumes:
       - ../nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./images:/app/storage/images
+      - ./storage/images:/app/storage/images
     depends_on:
       - flor_app
 

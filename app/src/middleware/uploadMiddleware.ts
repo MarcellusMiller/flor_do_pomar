@@ -6,7 +6,6 @@ import fs from "fs"
 // uploadPath guarda o caminho para guardar a imagem, adicionada também com contexto ao dockerfile
 const uploadPath = path.join(process.cwd(), "storage", "images")
 
-
 const storage = multer.diskStorage({
   // destino para o multer 
   destination: (_, __, cb) => {
