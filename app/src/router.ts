@@ -1,7 +1,8 @@
 import { Router } from "express";
 import messageController from "./controller/messagesController.js";
 import uploadMiddleware from "./middleware/uploadMiddleware.js";
-
+import adminController from "./controller/admin/adminController.js";
+import { adminAuth } from "./middleware/adminMiddleware.js";
 const router = Router();
 
 // rotas da aplicação
@@ -16,5 +17,11 @@ router.post("/message",
     uploadMiddleware.single("image"),
     messageController.createMessage
 );
+
+router.get("/admin/messages", 
+    adminAuth,
+    adminController.ListMessages
+);
+
 
 export default router;
