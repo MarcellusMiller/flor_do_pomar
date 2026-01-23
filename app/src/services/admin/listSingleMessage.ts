@@ -1,10 +1,16 @@
 import messagesRepository from "../../DB/repository/messagesRepository.js";
-import { UUID } from "crypto";
 
 class listSingleMessage {
     async execute(id: string) {
         
-        const message = await messagesRepository.findById(id)
+        const message = await messagesRepository.findById(id);
+        if(!message) {
+            return null;
+        }
+        if(!message.is_open) {
+            await messagesRepository.markAsOpen(id);
+            message.is_open = true;
+        }
         return message
     }
 }

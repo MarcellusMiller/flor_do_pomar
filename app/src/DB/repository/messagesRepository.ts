@@ -52,6 +52,13 @@ class messagesRepository {
     return rows[0] ?? null;
   }
     
+  async markAsOpen(id: string) {
+    const query = `UPDATE messages SET is_open = true WHERE id = $1`;
+    const value = [id];
+
+    const {rows} = await pool.query(query, value);
+    return rows
+  }
 }
 
 export default new messagesRepository();
