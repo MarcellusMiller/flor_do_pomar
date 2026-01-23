@@ -59,6 +59,20 @@ class messagesRepository {
     const {rows} = await pool.query(query, value);
     return rows
   }
+
+  async countUnread() {
+    const query = `SELECT COUNT (*) FROM messages WHERE is_open = False`;
+    const {rows} = await pool.query(query);
+    return Number(rows[0].count)
+  }
+
+  async deleteMessage(id: string) {
+    const query = `DELETE FROM messages WHERE id = $1 RETURNING id, sender_name, type, is_open, created_at`;
+    const value = [id];
+
+    const {rows} = await pool.query(query, value);
+    return rows[0] ?? null;
+  }
 }
 
 export default new messagesRepository();

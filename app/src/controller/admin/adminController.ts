@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import listMessagesFilterDTO from "../../DTOS/listMessagesFilterDTO.js";
 import listMessagesService from "../../services/admin/listMessagesService.js";
 import listSingleMessage from "../../services/admin/listSingleMessage.js";
+import countUnreadMessages from "../../services/admin/countUnreadMessages.js";
+import deleteMessage from "../../services/admin/deleteMessage.js";
 
 
 class adminController {
@@ -18,6 +20,7 @@ class adminController {
         };
         // messages que é a chamada da função com filtros como parametro
         const messages = await listMessagesService.execute(filters);
+
 
         return res.status(200).json({
             message: "Mensagens listadas com sucesso",
@@ -45,8 +48,30 @@ class adminController {
         } catch(error) {
             return res.status(500).json({message: "Erro ao buscar mensagem"})
         }
-        
     }
+   async countUnreadMessages(req: Request, res: Response) {
+        const count = await countUnreadMessages.execute();
+        return res.status(200).json({
+            message: "Numero de mensagens obtido",
+            data: count
+        })
+   }
+   async deleteMessage(req: Request, res: Response) {
+        const {id} = req.params;
+
+        if(!id) {
+            return res.status(400).json({message: "ID e obrigatorio"});
+        }
+
+        const deletedMessage = await deleteMessage.execute(id);
+        if(!deletedMessage) {
+            return res.status(404).json({message: "Mensagem não encontrada"});
+        }
+        return res.status(200).json({
+            message: "Mensagem apagada com sucesso",
+            data: deletedMessage
+        })
+   }
 }
 
 export default new adminController()
