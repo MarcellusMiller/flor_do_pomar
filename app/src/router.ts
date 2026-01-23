@@ -23,5 +23,19 @@ router.get("/admin/messages",
     adminController.ListMessages
 );
 
+router.get("/admin/messages/:id", 
+    adminAuth,
+    adminController.ListSingleMessage
+)
+
+router.get("/admin/messages/unread/count",
+    adminAuth,
+    adminController.countUnreadMessages
+)
+
+router.delete("/admin/delete/messages/:id",
+    adminAuth,
+    adminController.deleteMessage
+);
 
 export default router;
