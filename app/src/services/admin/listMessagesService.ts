@@ -2,6 +2,7 @@ import messagesRepository from "../../DB/repository/messagesRepository.js";
 import listMessagesFilterDTO from "../../DTOS/listMessagesFilterDTO.js";
 
 class listMessagesService {
+    // função que vai ser utilizada no controller
     async execute(filters: listMessagesFilterDTO) {
 
         const finalFilters: listMessagesFilterDTO = {
@@ -10,8 +11,8 @@ class listMessagesService {
             order: filters.order ?? "desc",
         };
 
-        const repository = new messagesRepository()
-        return repository.list(finalFilters);
+        
+        return messagesRepository.list(finalFilters);
     }
 }
 

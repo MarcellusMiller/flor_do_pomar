@@ -1,5 +1,3 @@
-import { UUID } from "crypto";
-
 interface listMessagesDTO {
     id: string;
     senderName: string;

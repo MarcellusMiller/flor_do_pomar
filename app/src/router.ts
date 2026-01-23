@@ -23,5 +23,9 @@ router.get("/admin/messages",
     adminController.ListMessages
 );
 
+router.get("/admin/messages/:id", 
+    adminAuth,
+    adminController.ListSingleMessage
+)
 
 export default router;
