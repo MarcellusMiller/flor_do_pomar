@@ -9,7 +9,7 @@ class messageCuration implements messageServiceInterface {
             throw new Error("Tipo de mensagem inválido para curação");
         } 
         try {
-            if(!message.localEvent || !message.dateOfEvent || !message.type_of_event) {
+            if(!message.localEvent  || !message.type_of_event) {
                 throw new Error("Dados incompletos para mensagem de curação");
             }
             // chamada ao repositório para salvar a mensagem de curação

@@ -9,14 +9,14 @@ interface createMessageDTO {
     // Campos opcionais 
     
     localEvent? : string;
-    dateOfEvent? : Date;
     image? : string
     // criarei mais tarde
     numberOfGuests? : number;
     budget? : string;
     ideas? : string;
 
-
+    // removidos caso for adicionar novamente
+    // dateOfEvent? : Date;
 }
 
 export default createMessageDTO;
