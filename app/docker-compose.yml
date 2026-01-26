@@ -1,18 +1,4 @@
-version: "3.9"
-
 services:
-  
-  postgres_test:
-    image: postgres:16
-    container_name: postgres_test
-    environment:
-      POSTGRES_USER: test
-      POSTGRES_PASSWORD: test
-      POSTGRES_DB: app_test
-    ports:
-      - "5433:5432"
-
-
   postgres:
     image: postgres:16
     container_name: postgres_db
@@ -49,7 +35,19 @@ services:
     depends_on:
       - flor_app
 
+  backup:
+    build: ../backup
+    container_name: postgres_backup
+    depends_on:
+      - postgres
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_DB: app_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      TZ: Europe/Lisbon
+    volumes:
+      - ../backups:/backups
 
 volumes:
   pgdata:
-  

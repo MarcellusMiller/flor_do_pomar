@@ -20,7 +20,7 @@ class messageController{
             }
             // validação dos dados obrigatórios
             if(!body || !body.senderName || !body.email || !body.phone || !body.type || !body.message || !body.type_of_event){ 
-                console.log("to parando aqui mn")
+                console.log("to parando aqui mn");
                 return res.status(400).json({message: "Dados incompletos"});
             } 
             // logica para criação de mensagem de curadoria
