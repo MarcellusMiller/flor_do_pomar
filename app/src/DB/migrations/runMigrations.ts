@@ -1,6 +1,7 @@
 // import { up } from "./001_create_message_table.js";
 // import { up } from "./002_add_images_to_table.js";
-import { up } from "./003_adaptation_of_messages_table.js";
+// import { up } from "./003_adaptation_of_messages_table.js";
+import { up } from "./004_create_admin_table.js";
 
 (async () => {
     try {
