@@ -5,7 +5,7 @@ import router from "./router.js";
 const app = express();
 
 // configurando o app para receber requisições json
-
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(router);
 

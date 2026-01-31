@@ -3,6 +3,7 @@ import messageController from "./controller/messagesController.js";
 import uploadMiddleware from "./middleware/uploadMiddleware.js";
 import adminController from "./controller/admin/adminController.js";
 import { adminAuth } from "./middleware/adminMiddleware.js";
+import adminLoginController from "./controller/admin/adminLoginController.js";
 const router = Router();
 
 // rotas da aplicação
@@ -14,7 +15,7 @@ router.get("/", (req, res) => {
 
 // rotas da api
 router.post("/message",
-    uploadMiddleware.single("image"),
+    uploadMiddleware.array("image", 5),
     messageController.createMessage
 );
 
@@ -37,5 +38,9 @@ router.delete("/admin/delete/messages/:id",
     adminAuth,
     adminController.deleteMessage
 );
+
+router.post("/admin/login",
+    adminLoginController.login
+)
 
 export default router;
