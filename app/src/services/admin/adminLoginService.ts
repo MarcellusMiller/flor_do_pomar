@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken";
+import JwtService from "../utils/jwt.js";
 import adminLoginRepository from "../../DB/repository/adminLoginRepository.js";
 import cryptPassword from "../utils/cryptPassword.js";
 
@@ -14,25 +14,19 @@ class AdminLoginService {
         if(!passwordMatch) {
             throw new Error("Credencias invalidas");
         }
-        const token = jwt.sign(
-            {
-                id: admin.id,
-                email: admin.email,
-                // role: admin
-            },
-            process.env.JWT_SECRET!,
-            {
-                expiresIn: "1d"
-            }
-        );
+
+        const token = JwtService.createToken(admin);
+
         return {
             token,
-            admin: {
-                id: admin.id,
-                email: admin.email
-            }
-        }
+            admin
+        };
     }
+
+    validateToken(token: string) {
+        return JwtService.validateToken(token);
+    }
+    
 }
 
 export default new AdminLoginService()
