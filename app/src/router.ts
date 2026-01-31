@@ -15,7 +15,7 @@ router.get("/", (req, res) => {
 
 // rotas da api
 router.post("/message",
-    uploadMiddleware.single("image"),
+    uploadMiddleware.array("image", 5),
     messageController.createMessage
 );
 

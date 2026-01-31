@@ -1,5 +1,4 @@
 import jwt from "jsonwebtoken";
-import bcrypt from "bcrypt";
 import adminLoginRepository from "../../DB/repository/adminLoginRepository.js";
 import cryptPassword from "../utils/cryptPassword.js";
 

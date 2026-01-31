@@ -1,6 +1,5 @@
 import { pool } from "../DBconn.js";
 import listMessagesFilterDTO from "../../DTOS/listMessagesFilterDTO.js";
-import { UUID } from "crypto";
 class messagesRepository {
   // função deverá sempre receber um tipo filtro
   async list(filters: listMessagesFilterDTO) {

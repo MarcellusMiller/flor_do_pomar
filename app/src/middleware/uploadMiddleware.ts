@@ -36,7 +36,7 @@ const uploadMiddleware = multer ({
   },
   // limite para 5mb
   limits: {
-    fieldSize: 5 * 1024 * 1024
+    fileSize: 5 * 1024 * 1024
   }
 });
 

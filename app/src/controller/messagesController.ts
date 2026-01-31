@@ -1,41 +1,39 @@
 import { Request, Response } from "express";
-import messageCuration from "../services/messages/createCurationService.js";
-import messagePlanning from "../services/messages/createPlaningService.js";
+import messageDecoration from "../services/messages/createDecorationService.js";
+import messagePlanning from "../services/messages/createWeddingPlaningService.js";
 class messageController{
     async createMessage(req: Request, res: Response){
         // uso do try para tratar erros
         try {
             // captura do json enviado pelo cliente
             const body = { ...req.body }; // criando a garantia de um objeto com spread operator
-            const file = req.file; // imagem
+            const files = req.files as any[]; // imagem
 
             // remover em produção
             console.log(body)
-            console.log(file)
+            console.log(files)
 
             // checa se existe imagem
-            if(file) {
-                body.image = file.filename;
-                
+            if(files && files.length > 0) {
+                body.image = files.map(file => file.filename);
             }
             // validação dos dados obrigatórios
             if(!body || !body.senderName || !body.email || !body.phone || !body.type || !body.message || !body.type_of_event){ 
-                console.log("to parando aqui mn");
                 return res.status(400).json({message: "Dados incompletos"});
             } 
-            // logica para criação de mensagem de curadoria
-            else if(body.type === "curation"){
-                const service = new messageCuration();
+            // logica para criação de mensagem de decoration
+            else if(body.type === "decoration"){
+                const service = new messageDecoration();
                 const result = await service.createMessage(body)
                 
                 
                 return res.status(201).json({
-                    message: "Mensagem de curadoria criada com sucesso", 
+                    message: "Mensagem de decoratin criada com sucesso", 
                     data: result
                 });
             } 
             // to do para mensagem de tipo planing
-            else if(body.type === "planning"){
+            else if(body.type === "weddingPlanning"){
                 const service = new messagePlanning();
                 const result = await service.createMessage(body);
             

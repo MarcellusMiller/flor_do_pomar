@@ -1,5 +1,5 @@
 interface createMessageDTO {
-    type: "curation" | "planning";
+    type: "decoration" | "weddingPlanning";
    
     senderName : string;
     email: string;
@@ -10,6 +10,7 @@ interface createMessageDTO {
     
     localEvent? : string;
     image? : string
+    
     // criarei mais tarde
     numberOfGuests? : number;
     budget? : string;
