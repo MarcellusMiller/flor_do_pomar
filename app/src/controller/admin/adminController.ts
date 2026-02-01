@@ -4,6 +4,8 @@ import listMessagesService from "../../services/admin/listMessagesService.js";
 import listSingleMessage from "../../services/admin/listSingleMessage.js";
 import countUnreadMessages from "../../services/admin/countUnreadMessages.js";
 import deleteMessage from "../../services/admin/deleteMessage.js";
+import PullImagesService from "../../services/messages/PullImagesService.js";
+import path from "path";
 
 
 class adminController {
@@ -40,6 +42,13 @@ class adminController {
             if(!message) {
                 return res.status(404).json({message: "Mensagem não encontrada"})
             }
+
+            const imagePath = await PullImagesService.execute(id);
+
+            if(imagePath) {
+                // Retorna a URL relativa para o frontend acessar (ex: /images/nome-do-arquivo.jpg)
+                message.image = `/images/${path.basename(imagePath)}`;
+            };
 
             return res.status(200).json({
                 message: "Mensagem obtida com sucesso",
