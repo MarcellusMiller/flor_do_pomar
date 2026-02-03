@@ -4,7 +4,7 @@ import listMessagesService from "../../services/admin/listMessagesService.js";
 import listSingleMessage from "../../services/admin/listSingleMessage.js";
 import countUnreadMessages from "../../services/admin/countUnreadMessages.js";
 import deleteMessage from "../../services/admin/deleteMessage.js";
-import PullImagesService from "../../services/messages/PullImagesService.js";
+import messagesRepository from "../../DB/repository/messagesRepository.js";
 import path from "path";
 
 
@@ -43,11 +43,12 @@ class adminController {
                 return res.status(404).json({message: "Mensagem não encontrada"})
             }
 
-            const imagePath = await PullImagesService.execute(id);
+            const imagePath = await messagesRepository.findImageByMessageId(id);
 
             if(imagePath) {
+                const firstImage = Array.isArray(imagePath) ? imagePath[0] : imagePath;
                 // Retorna a URL relativa para o frontend acessar (ex: /images/nome-do-arquivo.jpg)
-                message.image = `/images/${path.basename(imagePath)}`;
+                message.image = `/images/${path.basename(firstImage)}`;
             };
 
             return res.status(200).json({
@@ -55,6 +56,7 @@ class adminController {
                 data: message
             })
         } catch(error) {
+            console.log(error)
             return res.status(500).json({message: "Erro ao buscar mensagem"})
         }
     }
