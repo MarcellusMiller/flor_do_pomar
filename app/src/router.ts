@@ -21,6 +21,11 @@ router.post("/message",
     sendTestEmailController.send
 );
 
+router.get("/admin/messages/unread/count",
+    adminAuth,
+    adminController.countUnreadMessages
+);
+
 router.get("/admin/messages", 
     adminAuth,
     adminController.ListMessages
@@ -29,11 +34,6 @@ router.get("/admin/messages",
 router.get("/admin/messages/:id", 
     adminAuth,
     adminController.ListSingleMessage
-)
-
-router.get("/admin/messages/unread/count",
-    adminAuth,
-    adminController.countUnreadMessages
 )
 
 router.delete("/admin/delete/messages/:id",

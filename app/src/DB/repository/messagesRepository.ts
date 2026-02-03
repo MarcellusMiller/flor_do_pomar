@@ -76,6 +76,8 @@ class messagesRepository {
   async findImageByMessageId(id: string) {
     const query = `SELECT image_path FROM messages WHERE id = $1`;
     const value = [id];
+    const {rows} = await pool.query(query, value);
+    return rows[0] ? rows[0].image_path : null;
   }
 }
 
