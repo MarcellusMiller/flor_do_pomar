@@ -33,7 +33,11 @@ class messagesRepository {
         type,
         is_open,
         created_at,
-        TO_CHAR(date_of_event, 'DD-MM-YYYY') as date_of_event
+        phone,
+        email,
+        local_event,
+        message,
+        date_of_event
       FROM messages
       ${whereClause}
       ORDER BY created_at ${order}
