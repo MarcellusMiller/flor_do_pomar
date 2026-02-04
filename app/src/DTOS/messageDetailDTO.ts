@@ -8,6 +8,7 @@ interface MessageDetailDTO {
     imageUrl?: string;
     isOpen: boolean;
     createdAt: Date;
+    dateOfEvent?: Date;
 }
 
 export default MessageDetailDTO

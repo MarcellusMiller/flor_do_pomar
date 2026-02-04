@@ -32,7 +32,8 @@ class messagesRepository {
         sender_name,
         type,
         is_open,
-        created_at
+        created_at,
+        TO_CHAR(date_of_event, 'DD-MM-YYYY') as date_of_event
       FROM messages
       ${whereClause}
       ORDER BY created_at ${order}
@@ -44,7 +45,22 @@ class messagesRepository {
 
   async findById(id: string) {
 
-    const query =  `SELECT * FROM messages WHERE id = $1`;
+    const query =  `
+      SELECT 
+        id,
+        sender_name,
+        email,
+        phone,
+        message,
+        type,
+        local_event,
+        type_of_event,
+        is_open,
+        created_at,
+        image_path,
+        TO_CHAR(date_of_event, 'DD-MM-YYYY') as date_of_event
+      FROM messages 
+      WHERE id = $1`;
     const value = [id];
 
     const {rows} = await pool.query(query, value);

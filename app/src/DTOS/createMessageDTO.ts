@@ -17,7 +17,7 @@ interface createMessageDTO {
     ideas? : string;
 
     // removidos caso for adicionar novamente
-    // dateOfEvent? : Date;
+    dateOfEvent? : Date;
 }
 
 export default createMessageDTO;
