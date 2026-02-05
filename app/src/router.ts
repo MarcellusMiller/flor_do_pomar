@@ -26,7 +26,7 @@ router.get("/admin/messages/unread/count",
     adminController.countUnreadMessages
 );
 
-router.get("/admin/messages", 
+router.get("/admin/messages/:page", 
     adminAuth,
     adminController.ListMessages
 );
@@ -43,10 +43,10 @@ router.delete("/admin/delete/messages/:id",
 
 router.post("/admin/login",
     adminLoginController.login
-)
+);
 
 router.post("/email/sendTest",
     sendTestEmailController.send
-)
+);
 
 export default router;

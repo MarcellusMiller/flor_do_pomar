@@ -2,9 +2,11 @@ import { pool } from "../DBconn.js";
 import listMessagesFilterDTO from "../../DTOS/listMessagesFilterDTO.js";
 class messagesRepository {
   // função deverá sempre receber um tipo filtro
-  async list(filters: listMessagesFilterDTO) {
+  async list(filters: listMessagesFilterDTO, limit: number, offset: number) {
     const conditions: string[] = [];
     const values: any[] = [];
+    // condições de paginação
+    const paginatorValues = [limit, offset];
 
     // verificações de valores para os filtros
     // se o filtro não for vazio ele puxa o valor para o array de condições
@@ -36,6 +38,8 @@ class messagesRepository {
       FROM messages
       ${whereClause}
       ORDER BY created_at ${order}
+      LIMIT ${paginatorValues[0]}
+      OFFSET ${paginatorValues[1]}
     `;
     // objeto que ira receber a resposta do db da nossa query com os valores
     const { rows } = await pool.query(query, values);

@@ -10,6 +10,11 @@ import path from "path";
 
 class adminController {
     async ListMessages(req: Request, res: Response) {
+        // paginação 
+        const page = parseInt(req.query.page as string) || parseInt(req.params.page) || 1;
+        const limit = 10;
+        const offset = (page - 1) * limit;
+        
         // filtro basicos para as mensagens
         const filters: listMessagesFilterDTO = {
             isOpen: req.query.isOpen != undefined
@@ -21,8 +26,7 @@ class adminController {
             order: req.query.order as "asc" | "desc" | undefined,
         };
         // messages que é a chamada da função com filtros como parametro
-        const messages = await listMessagesService.execute(filters);
-
+        const messages = await listMessagesService.execute(filters, limit, offset);
 
         return res.status(200).json({
             message: "Mensagens listadas com sucesso",
