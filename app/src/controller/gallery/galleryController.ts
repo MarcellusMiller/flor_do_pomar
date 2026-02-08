@@ -23,6 +23,29 @@ class galleryController {
         }
         
     }
+
+    async getAll(req: Request, res: Response) {
+        try {
+            // Chama o serviço (você precisa adicionar o método getAll no galleryService)
+            const images = await galleryService.getAll();
+
+            // Mapeia para retornar a URL completa acessível pelo Nginx/Express
+            const response = images.map((img: any) => ({
+                name: img.image_name,
+                tag: img.tag,
+                url: `${req.protocol}://${req.get('host')}/gallery/${img.image_path}`
+            }));
+
+            res.status(200).json(response);
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({ message: "Erro ao buscar galeria" });
+        }
+    }
+    // todo: implementar método de delete, lembrando de deletar o arquivo do storage também
+    async deleteImage(req: Request, res: Response) {
+        
+    }
 }
 
 export default new galleryController(); 

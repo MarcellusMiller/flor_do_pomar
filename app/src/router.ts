@@ -36,7 +36,7 @@ router.get("/admin/messages",
 router.get("/admin/messages/:id", 
     adminAuth,
     adminController.ListSingleMessage
-)
+);
 
 router.delete("/admin/delete/messages/:id",
     adminAuth,
@@ -45,15 +45,25 @@ router.delete("/admin/delete/messages/:id",
 
 router.post("/admin/login",
     adminLoginController.login
-)
+);
 
 router.post("/email/sendTest",
     sendTestEmailController.send
-)
+);
 
 router.post("/gallery/upload", 
     adminAuth,
     uploadGallery.single("image"),
     galleryController.upload
+);
+
+router.get("/gallery", 
+    galleryController.getAll
+);
+
+// todo: implementar rota de delete, lembrando de deletar o arquivo do storage também
+router.delete("/gallery/delete/:name",
+    adminAuth,
+    galleryController.deleteImage
 )
 export default router;

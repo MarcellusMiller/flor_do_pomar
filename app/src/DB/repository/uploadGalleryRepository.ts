@@ -11,3 +11,13 @@ export async function uploadGalleryRepository(image: imageDTO) {
         throw error;
     }
 }
+
+export async function getAllImagesRepository() {
+    const query = "SELECT image_name, image_path, tag FROM gallery ORDER BY created_at DESC";
+    try {
+        const { rows } = await pool.query(query);
+        return rows;
+    } catch (error) {
+        throw error;
+    }
+}
