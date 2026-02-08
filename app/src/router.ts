@@ -49,4 +49,8 @@ router.post("/email/sendTest",
     sendTestEmailController.send
 )
 
+router.post("/gallery/upload", 
+    adminAuth,
+    
+)
 export default router;
