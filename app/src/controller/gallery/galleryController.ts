@@ -3,9 +3,15 @@ import galleryService from "../../services/gallery/galleryService.js";
 
 class galleryController {
     async upload(req: Request, res: Response) {
-        const reqBody: {} = {...req.body};
         try {
-            if(!reqBody) {
+            const reqBody = {...req.body};
+            
+            // Verifica se o arquivo foi processado pelo middleware do multer
+            if (req.file) {
+                reqBody.path = req.file.filename;
+            }
+
+            if(!reqBody || (!reqBody.path && !req.file)) {
                 res.status(400).json({message: "Ausencia de dados"});
             } else {
                 await galleryService.upload(reqBody);

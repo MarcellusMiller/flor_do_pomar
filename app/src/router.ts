@@ -5,6 +5,8 @@ import adminController from "./controller/admin/adminController.js";
 import { adminAuth } from "./middleware/adminMiddleware.js";
 import adminLoginController from "./controller/admin/adminLoginController.js";
 import sendTestEmailController from "./controller/email/sendTestEmailController.js";
+import galleryController from "./controller/gallery/galleryController.js";
+import uploadGallery from "./middleware/uploadGalleryMiddleware.js";
 const router = Router();
 
 // rotas da aplicação
@@ -51,6 +53,7 @@ router.post("/email/sendTest",
 
 router.post("/gallery/upload", 
     adminAuth,
-    
+    uploadGallery.single("image"),
+    galleryController.upload
 )
 export default router;

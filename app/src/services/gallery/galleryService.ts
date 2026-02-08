@@ -1,6 +1,8 @@
+import { uploadGalleryRepository } from "../../DB/repository/uploadGalleryRepository.js";
+import imageDTO from "../../DTOS/Gallery/galleryDTO.js";
 class galleryService {
-    async upload(data: any) {
-        
+    async upload(data: imageDTO) {
+        return await uploadGalleryRepository(data);
     }
 }
 

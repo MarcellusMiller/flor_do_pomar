@@ -20,6 +20,7 @@ app.use(coockieParser());
 
 // Arquivos estáticos primeiro
 app.use("/images", express.static(path.join(__dirname, "..", "storage", "images")));
+app.use("/gallery", express.static(path.join(__dirname, "..", "storage", "gallery")));
 
 // Depois as rotas
 app.use(router);
