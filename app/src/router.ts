@@ -5,6 +5,8 @@ import adminController from "./controller/admin/adminController.js";
 import { adminAuth } from "./middleware/adminMiddleware.js";
 import adminLoginController from "./controller/admin/adminLoginController.js";
 import sendTestEmailController from "./controller/email/sendTestEmailController.js";
+import galleryController from "./controller/gallery/galleryController.js";
+import uploadGallery from "./middleware/uploadGalleryMiddleware.js";
 const router = Router();
 
 // rotas da aplicação
@@ -34,7 +36,7 @@ router.get("/admin/messages",
 router.get("/admin/messages/:id", 
     adminAuth,
     adminController.ListSingleMessage
-)
+);
 
 router.delete("/admin/delete/messages/:id",
     adminAuth,
@@ -43,14 +45,25 @@ router.delete("/admin/delete/messages/:id",
 
 router.post("/admin/login",
     adminLoginController.login
-)
+);
 
 router.post("/email/sendTest",
     sendTestEmailController.send
-)
+);
 
 router.post("/gallery/upload", 
     adminAuth,
-    
+    uploadGallery.single("image"),
+    galleryController.upload
+);
+// todo retornar também a orientation
+router.get("/gallery", 
+    galleryController.getAll
+);
+
+// rota para deletar imagem da galeria
+router.delete("/gallery/delete/:name",
+    adminAuth,
+    galleryController.deleteImage
 )
 export default router;

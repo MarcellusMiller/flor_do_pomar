@@ -5,8 +5,8 @@
 // import { up } from "./005_alter_column_curation_name.js";
 // import { up } from "./006_alter_column_pathImages.js";
 // import { up } from "./007_alter_column_date_of_event.js";
-import { up } from "./008_create_galery_table.js";
-
+// import { up } from "./008_create_galery_table.js";
+import { up } from "./009_add_orientation_to_gallery_table.js";
 (async () => {
     try {
         console.log("Running migrations...");
