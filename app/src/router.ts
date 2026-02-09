@@ -56,12 +56,12 @@ router.post("/gallery/upload",
     uploadGallery.single("image"),
     galleryController.upload
 );
-
+// todo retornar também a orientation
 router.get("/gallery", 
     galleryController.getAll
 );
 
-// todo: implementar rota de delete, lembrando de deletar o arquivo do storage também
+// rota para deletar imagem da galeria
 router.delete("/gallery/delete/:name",
     adminAuth,
     galleryController.deleteImage
