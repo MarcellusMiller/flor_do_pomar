@@ -1,8 +1,44 @@
 {
+  "name": "app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "migrate": "node dist/DB/migrations/runMigrations.js",
+    "test:db": "node dist/tests/db.test.js",
+    "admin:seed": "node dist/DB/seeds/insertAdmAccount.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
   "dependencies": {
-    "nodemailer": "^7.0.13"
+    "@types/bcrypt": "^6.0.0",
+    "@types/mime": "^3.0.4",
+    "@types/multer": "^2.0.0",
+    "bcrypt": "^6.0.0",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "mime": "^4.1.0",
+    "multer": "^2.0.2",
+    "nodemailer": "^6.9.16",
+    "pg": "^8.16.3",
+    "sharp": "^0.34.5"
   },
   "devDependencies": {
-    "@types/nodemailer": "^7.0.9"
+    "@types/cookie-parser": "^1.4.10",
+    "@types/dotenv": "^6.1.1",
+    "@types/express": "^5.0.6",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^24.10.4",
+    "@types/nodemailer": "^6.4.17",
+    "@types/pg": "^8.16.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
   }
 }
