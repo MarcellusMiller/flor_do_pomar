@@ -9,7 +9,7 @@ export async function up() {
 
 export async function down() {
     await pool.query(`
-        DROP TABLE messages
+        ALTER TABLE messages
         DROP COLUMN image_path;
         `)
 }

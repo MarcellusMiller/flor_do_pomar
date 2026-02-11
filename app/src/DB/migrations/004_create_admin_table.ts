@@ -2,7 +2,7 @@ import { pool } from "../DBconn.js";
 
 export async function up() {
     await pool.query(`
-        CREATE EXTENSION IF NOT EXISTS "pgcrypto"
+        CREATE EXTENSION IF NOT EXISTS "pgcrypto";
         CREATE TABLE IF NOT EXISTS admin (
             id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
 
