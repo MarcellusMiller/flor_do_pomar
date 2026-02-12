@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import galleryService from "../../services/gallery/galleryService.js";
+import dotenv from "dotenv";
+dotenv.config();
 
 class galleryController {
     async upload(req: Request, res: Response) {
@@ -41,7 +43,8 @@ class galleryController {
             const response = images.map((img: any) => ({
                 name: img.image_name,
                 tag: img.tag,
-                url: `${req.protocol}://${req.get('host')}/gallery/${img.image_path}`
+                url: `${process.env.GALLERY_PATH}${img.image_path}`, 
+                // Exemplo: http://localhost/gallery/filename.jpg
             }));
 
             res.status(200).json(response);
