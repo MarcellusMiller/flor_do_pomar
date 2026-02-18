@@ -7,10 +7,11 @@ class listSingleMessage {
         if(!message) {
             return null;
         }
-        if(!message.is_open) {
-            await messagesRepository.markAsOpen(id);
-            message.is_open = true;
-        }
+        // depois ajustar para um update para marcar como lida, e não ficar dependendo do front para isso
+        // if(!message.is_open) {
+        //     await messagesRepository.markAsOpen(id);
+        //     message.is_open = true;
+        // }
         return message
     }
 }
