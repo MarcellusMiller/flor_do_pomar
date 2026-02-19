@@ -6,7 +6,7 @@ class listMessagesService {
     async execute(filters: listMessagesFilterDTO) {
 
         const finalFilters: listMessagesFilterDTO = {
-            isOpen: filters.isOpen ?? false, //valor default
+            isOpen: filters.isOpen, //valor default
             type: filters.type,
             order: filters.order ?? "desc",
         };
