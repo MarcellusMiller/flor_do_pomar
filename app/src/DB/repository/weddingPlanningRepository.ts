@@ -12,7 +12,7 @@ class planningRepository {
                 formattedDate = `${year}-${month}-${day}` as any;
             }
 
-            const query = `INSERT INTO messages (type, sender_name, email, phone, message, type_of_event, date_of_event,image_path) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *; `;
+            const query = `INSERT INTO messages (type, sender_name, email, phone, message, type_of_event, date_of_event,image_path, local_event) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *; `;
             const values = [
                 message.type,
                 message.senderName,
@@ -21,7 +21,8 @@ class planningRepository {
                 message.message,
                 message.type_of_event,
                 formattedDate,
-                message.image
+                message.image,
+                message.localEvent,
             ]
             const { rows} = await pool.query(query, values);
             return rows[0];
