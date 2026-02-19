@@ -20,7 +20,7 @@ router.get("/", (req, res) => {
 router.post("/message",
     uploadMiddleware.array("image", 5),
     messageController.createMessage,
-    sendTestEmailController.send
+    // sendTestEmailController.send
 );
 
 // router.get("/admin/messages/unread/count",

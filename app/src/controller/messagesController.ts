@@ -42,7 +42,7 @@ class messageController{
                     data: result });
             }
         } catch (error:any) {
-
+            console.error("Erro no createMessage:", error.message, error.stack);
             return res.status(500).json({message: error.message});
         }
 }

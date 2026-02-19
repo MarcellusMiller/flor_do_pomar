@@ -21,10 +21,10 @@ class decorationRepository  {
                 message.email,
                 message.phone,
                 message.message,
-                message.localEvent,      
                 message.type_of_event,
                 formattedDate,
-                message.image
+                message.image,
+                message.localEvent   
 
                 // removido caso queira adicionar novamente descomente e adicione a query
                 // message.dateOfEvent,

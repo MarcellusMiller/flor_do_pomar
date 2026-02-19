@@ -4,9 +4,7 @@ import listMessagesService from "../../services/admin/listMessagesService.js";
 import listSingleMessage from "../../services/admin/listSingleMessage.js";
 import countUnreadMessages from "../../services/admin/countUnreadMessages.js";
 import deleteMessage from "../../services/admin/deleteMessage.js";
-import messagesRepository from "../../DB/repository/messagesRepository.js";
-import path from "path";
-// testar amanhä
+
 
 class adminController {
     async ListMessages(req: Request, res: Response) {
@@ -42,14 +40,6 @@ class adminController {
             if(!message) {
                 return res.status(404).json({message: "Mensagem não encontrada"})
             }
-
-            const imagePath = await messagesRepository.findImageByMessageId(id);
-
-            if(imagePath) {
-                const firstImage = Array.isArray(imagePath) ? imagePath[0] : imagePath;
-                // Retorna a URL relativa para o frontend acessar (ex: /images/nome-do-arquivo.jpg)
-                message.image = `/images/${path.basename(firstImage)}`;
-            };
 
             return res.status(200).json({
                 message: "Mensagem obtida com sucesso",
