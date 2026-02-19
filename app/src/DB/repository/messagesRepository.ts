@@ -62,7 +62,7 @@ class messagesRepository {
         is_open,
         created_at,
         image_path,
-        TO_CHAR(date_of_event, 'DD-MM-YYYY') as date_of_event
+        TO_CHAR(date_of_event, 'YYYY-MM-DD') as date_of_event
       FROM messages 
       WHERE id = $1`;
     const value = [id];
