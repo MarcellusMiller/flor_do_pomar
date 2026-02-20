@@ -9,7 +9,7 @@ class adminController {
     async ListMessages(req: Request, res: Response) {
         // paginação 
         const page = parseInt(req.query.page as string) || parseInt(req.params.page) || 1;
-        const limit = 10;
+        const limit = 5;
         const offset = (page - 1) * limit;
         
         // filtro basicos para as mensagens
