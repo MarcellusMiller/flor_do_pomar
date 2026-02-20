@@ -18,7 +18,7 @@ class dayCoordinationRepository {
             message.message,
             message.localEvent || null,
             message.type_of_event,
-            message.dateOfEvent || null,
+            formattedDate || null,
             message.image || null
         ];
         const result = await pool.query(query, values);
