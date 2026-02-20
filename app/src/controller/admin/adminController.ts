@@ -27,7 +27,13 @@ class adminController {
 
         return res.status(200).json({
             message: "Mensagens listadas com sucesso",
-            data: messages
+            data: messages.rows,
+            pagination: {
+                total: messages.total,
+                page,
+                limit,
+                totalPages: Math.ceil(messages.total / limit),
+            }
         })
     }
     async ListSingleMessage(req: Request, res: Response) {
