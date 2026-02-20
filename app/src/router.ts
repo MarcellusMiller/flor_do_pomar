@@ -33,7 +33,7 @@ router.get("/admin/messages",
     adminController.ListMessages
 );
 
-router.get("/admin/messages/only/:id", 
+router.get("/admin/messages/:id", 
     adminAuth,
     adminController.ListSingleMessage
 );
