@@ -43,6 +43,13 @@ router.post("/admin/login",
     adminLoginController.login
 );
 
+router.get("/admin/verify", 
+    adminAuth,
+    (req, res) => {
+        return res.status(200).json({ status: "ok" });
+    }
+);
+
 router.post("/email/sendTest",
     sendTestEmailController.send
 );
