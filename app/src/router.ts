@@ -28,12 +28,12 @@ router.post("/message",
 //     adminController.countUnreadMessages
 // );
 
-router.get("/admin/messages/:page", 
+router.get("/admin/messages", 
     adminAuth,
     adminController.ListMessages
 );
 
-router.get("/admin/messages/only/:id", 
+router.get("/admin/messages/:id", 
     adminAuth,
     adminController.ListSingleMessage
 );
