@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import messageDecoration from "../services/messages/createDecorationService.js";
 import messagePlanning from "../services/messages/createWeddingPlaningService.js";
+import fs from "fs";
 class messageController{
     async createMessage(req: Request, res: Response){
         // uso do try para tratar erros
@@ -15,7 +16,17 @@ class messageController{
 
             // checa se existe imagem
             if(files && files.length > 0) {
-                body.image = files.map(file => file.filename);
+                for(const file of files) {
+                    const isImage = file.mimetype.startsWith("image/");
+                    const limit = isImage ? 5 * 1024 * 1024 : 10 * 1024 * 1024; // 5MB para imagens, 10MB para outros arquivos
+                    if(file.size > limit) {
+                        files.forEach((f) => fs.unlinkSync(f.path)); // remove todos os arquivos do servidor
+                        return res.status(400).json({message: `${isImage ? "Imagens" : "PDFs"} excedem o limite de ${isImage ? "5MB" : "10MB"}`});
+                    } 
+                }
+                body.image = files.map((file) => ({
+                    filename: file.filename,
+                }));
             }
             // validação dos dados obrigatórios
             if(!body || !body.senderName || !body.email || !body.phone || !body.type || !body.message || !body.type_of_event){ 
@@ -40,6 +51,11 @@ class messageController{
                 return res.status(201).json({
                     message: "Mensagem de planejamento criada com sucesso",
                     data: result });
+            }
+            // to do para mensagem de cordenação do dia
+            else if(body.type === "dayCoordination"){
+                // implementar lógica para criar mensagem de coordenação do dia
+                return res.status(201).json({message: "Mensagem de coordenação do dia criada com sucesso"});
             }
         } catch (error:any) {
             console.error("Erro no createMessage:", error.message, error.stack);
