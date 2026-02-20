@@ -12,8 +12,8 @@ const router = Router();
 // rotas da aplicação
 
 // rota de teste 
-router.get("/", (req, res) => {
-    return res.json({ message: "API is running!" });
+router.get("/health", (req, res) => {
+    return res.status(200).json({ status: "ok" });
 });
 
 // rotas da api
