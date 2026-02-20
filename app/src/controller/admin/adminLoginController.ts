@@ -12,8 +12,8 @@ class AdminLoginController {
             const result = await adminLoginService.login(email, password);
             res.cookie("token", result.token, {
                 httpOnly: true,
-                secure: process.env.JWT_SECRET === "production",
-                sameSite: "strict",
+                secure: process.env.NODE_ENV === "production",
+                sameSite: "lax",
                 maxAge: 1000 * 60 * 60 * 24,
             });
             return res.status(200).json({

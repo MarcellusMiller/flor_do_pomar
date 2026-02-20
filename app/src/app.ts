@@ -15,7 +15,7 @@ const app = express();
 
 // configurando o app para receber requisições json
 app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+app.use(express.json({ limit: "10mb" }));
 app.use(coockieParser());
 
 // Arquivos estáticos primeiro

@@ -7,7 +7,7 @@ export async function up() {
         `)
 }
 
-export async function dows() {
+export async function down() {
     await pool.query(`
         ALTER TABLE MESSAGES
         DROP COLUMN date_of_event;

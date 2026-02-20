@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import messageDecoration from "../services/messages/createDecorationService.js";
 import messagePlanning from "../services/messages/createWeddingPlaningService.js";
 import fs from "fs";
+import messageDayCoordination from "../services/messages/createdayCoordination.js";
 class messageController{
     async createMessage(req: Request, res: Response){
         // uso do try para tratar erros
@@ -24,9 +25,7 @@ class messageController{
                         return res.status(400).json({message: `${isImage ? "Imagens" : "PDFs"} excedem o limite de ${isImage ? "5MB" : "10MB"}`});
                     } 
                 }
-                body.image = files.map((file) => ({
-                    filename: file.filename,
-                }));
+                body.image = files.map(file => file.filename);
             }
             // validação dos dados obrigatórios
             if(!body || !body.senderName || !body.email || !body.phone || !body.type || !body.message || !body.type_of_event){ 
@@ -53,9 +52,16 @@ class messageController{
                     data: result });
             }
             // to do para mensagem de cordenação do dia
-            else if(body.type === "dayCoordination"){
-                // implementar lógica para criar mensagem de coordenação do dia
-                return res.status(201).json({message: "Mensagem de coordenação do dia criada com sucesso"});
+            else if(body.type === "dayCoordenation"){
+                const service = new messageDayCoordination();
+                const result = await service.createMessage(body);
+                return res.status(201).json({
+                    message: "Mensagem de coordenação do dia criada com sucesso",
+                    data: result
+                });
+            }
+            else {
+                return res.status(400).json({message: "Tipo de mensagem inválido"});
             }
         } catch (error:any) {
             console.error("Erro no createMessage:", error.message, error.stack);

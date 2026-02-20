@@ -1,5 +1,5 @@
 interface createMessageDTO {
-    type: "decoration" | "weddingPlanning";
+    type: "decoration" | "weddingPlanning" | "dayCoordenation";
    
     senderName : string;
     email: string;
@@ -9,7 +9,7 @@ interface createMessageDTO {
     // Campos opcionais 
     
     localEvent? : string;
-    image? : string
+    image? : string[];
     
     // criarei mais tarde
     numberOfGuests? : number;
