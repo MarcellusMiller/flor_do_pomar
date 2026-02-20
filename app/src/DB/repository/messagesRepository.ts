@@ -5,50 +5,50 @@ class messagesRepository {
   async list(filters: listMessagesFilterDTO, limit: number, offset: number) {
     const conditions: string[] = [];
     const values: any[] = [];
-    // condições de paginação
-    const paginatorValues = [limit, offset];
 
-    // verificações de valores para os filtros
-    // se o filtro não for vazio ele puxa o valor para o array de condições
+    // 1. Construção dinâmica dos filtros
     if (filters.isOpen !== undefined) {
       values.push(filters.isOpen);
       conditions.push(`is_open = $${values.length}`);
     }
-    // se existir o tipo ele puxa para o array de condições
     if (filters.type) {
       values.push(filters.type);
       conditions.push(`type = $${values.length}`);
     }
-    // se existir mais de uma condição a variavel recebe AND caso não fica vazio
-    // esse where e concatenado a nossa query
-    const whereClause =
-      conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
 
-    // ordem caso não seja passada e ascendente
-    const order =
-      filters.order === "desc" ? "DESC" : "ASC";
-      // nossa query que vai ser feita no banco de dados
-      const query = `
+    const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
+    const order = filters.order === "desc" ? "DESC" : "ASC";
+
+    // 2. Query para contar o total (importante para o frontend saber o limite)
+    // Usamos os mesmos 'values' e 'whereClause' para que o total respeite os filtros
+    const countQuery = `SELECT COUNT(*) as total FROM messages ${whereClause}`;
+    const countRes = await pool.query(countQuery, values);
+    const totalItems = parseInt(countRes.rows[0].total);
+
+    // 3. Query para buscar os dados com LIMIT e OFFSET
+    // Adicionamos limit e offset ao final do array de valores para evitar SQL Injection
+    const dataValues = [...values, limit, offset];
+    const limitParam = `$${values.length + 1}`;
+    const offsetParam = `$${values.length + 2}`;
+
+    const dataQuery = `
       SELECT
-        id,
-        sender_name,
-        type,
-        is_open,
-        created_at,
-        phone,
-        email,
-        local_event,
-        message,
-        date_of_event
+        id, sender_name, type, is_open, created_at,
+        phone, email, local_event, message, date_of_event
       FROM messages
       ${whereClause}
       ORDER BY created_at ${order}
-      LIMIT ${paginatorValues[0]}
-      OFFSET ${paginatorValues[1]}
+      LIMIT ${limitParam}
+      OFFSET ${offsetParam}
     `;
-    // objeto que ira receber a resposta do db da nossa query com os valores
-    const { rows } = await pool.query(query, values);
-    return rows;
+
+    const dataRes = await pool.query(dataQuery, dataValues);
+
+    // 4. Retornamos um objeto contendo ambos
+    return {
+      rows: dataRes.rows,
+      total: totalItems
+    };
   }
 
   async findById(id: string) {
@@ -81,12 +81,6 @@ class messagesRepository {
 
     const {rows} = await pool.query(query, value);
     return rows
-  }
-
-  async countUnread() {
-    const query = `SELECT COUNT (*) FROM messages WHERE is_open = False`;
-    const {rows} = await pool.query(query);
-    return Number(rows[0].count)
   }
 
   async deleteMessage(id: string) {

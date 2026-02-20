@@ -23,10 +23,6 @@ router.post("/message",
     // sendTestEmailController.send
 );
 
-// router.get("/admin/messages/unread/count",
-//     adminAuth,
-//     adminController.countUnreadMessages
-// );
 
 router.get("/admin/messages", 
     adminAuth,

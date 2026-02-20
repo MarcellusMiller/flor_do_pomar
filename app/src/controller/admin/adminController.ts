@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import listMessagesFilterDTO from "../../DTOS/listMessagesFilterDTO.js";
 import listMessagesService from "../../services/admin/listMessagesService.js";
 import listSingleMessage from "../../services/admin/listSingleMessage.js";
-import countUnreadMessages from "../../services/admin/countUnreadMessages.js";
 import deleteMessage from "../../services/admin/deleteMessage.js";
 
 
@@ -54,13 +53,6 @@ class adminController {
             return res.status(500).json({message: "Erro ao buscar mensagem"})
         }
     }
-   async countUnreadMessages(req: Request, res: Response) {
-        const count = await countUnreadMessages.execute();
-        return res.status(200).json({
-            message: "Numero de mensagens obtido",
-            data: count
-        })
-   }
    async deleteMessage(req: Request, res: Response) {
         const {id} = req.params;
 
