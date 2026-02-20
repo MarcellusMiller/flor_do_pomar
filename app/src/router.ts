@@ -28,7 +28,7 @@ router.post("/message",
 //     adminController.countUnreadMessages
 // );
 
-router.get("/admin/messages", 
+router.get("/admin/messages/:page", 
     adminAuth,
     adminController.ListMessages
 );
