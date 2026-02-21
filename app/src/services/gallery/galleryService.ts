@@ -1,7 +1,7 @@
-import { uploadGalleryRepository, getAllImagesRepository, deleteImageRepository } from "../../DB/repository/uploadGalleryRepository.js";
+import { uploadGalleryRepository, getAllImagesRepository, deleteImageRepository, editImageRepository,getImageByNameRepository } from "../../DB/repository/uploadGalleryRepository.js";
 import imageDTO from "../../DTOS/Gallery/galleryDTO.js";
 import fs from "fs";
-import path from "path";
+import {join} from "path";
 
 class galleryService {
     async upload(data: imageDTO) {
@@ -15,7 +15,7 @@ class galleryService {
         const deletedImage = await deleteImageRepository(name);
 
     // 2. Monta o caminho correto 
-        const pathImage = path.join(process.cwd(), "storage", "gallery", deletedImage.image_path);
+        const pathImage = join(process.cwd(), "storage", "gallery", deletedImage.image_path);
 
         // 3. Verifica se o arquivo existe e deleta (evita erro se o arquivo já sumiu)
         if (fs.existsSync(pathImage)) {
@@ -24,6 +24,21 @@ class galleryService {
 
         return deletedImage;
     }
+
+    async editImage(name: string, tag: string, orientation: string, path: any) {
+        if(path) {
+            const current = await getImageByNameRepository(name);
+            if(current?.image_path) {
+                const pathImage = path.join(process.cwd(), "storage", "gallery", current.image_path);
+                if (fs.existsSync(pathImage)) {
+                    fs.unlinkSync(pathImage);
+                }
+            }
+        }
+        const editedImage = await editImageRepository(name, tag, orientation, path);
+        return editedImage;
+    }
+    
 }
 
 export default new galleryService();

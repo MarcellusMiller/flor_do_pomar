@@ -34,3 +34,25 @@ export async function deleteImageRepository(name: string) {
         throw error;
     }
 }
+export async function getImageByNameRepository(name: string) {
+    const query = "SELECT image_path FROM gallery WHERE image_name = $1";
+    const { rows } = await pool.query(query, [name]);
+    return rows[0];
+}
+
+export async function editImageRepository(name: string, tag: string, orientation: string, path: any) {
+    const query = path 
+    ? "UPDATE gallery SET image_name=$1, tag=$2, orientation=$3, image_path=$4 WHERE image_name=$5 RETURNING *"
+    : "UPDATE gallery SET image_name=$1, tag=$2, orientation=$3 WHERE image_name=$4 RETURNING *";
+
+    const values = path 
+    ? [name, tag, orientation, path, name]
+    : [name, tag, orientation, name];
+
+    try {
+        const { rows } = await pool.query(query, values);
+        return rows[0];
+    } catch (error) {
+        throw error;
+    }
+}

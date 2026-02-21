@@ -69,4 +69,10 @@ router.delete("/gallery/delete/:name",
     adminAuth,
     galleryController.deleteImage
 )
+
+router.patch("/gallery/edit/:name",
+    adminAuth,
+    uploadGallery.single("image"),
+    galleryController.editImage
+) 
 export default router;

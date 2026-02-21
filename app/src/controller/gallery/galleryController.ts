@@ -72,8 +72,34 @@ class galleryController {
             } catch (error) {
                 return res.status(500).json({message: "Erro ao deletar imagem"});
             }
-        }
+    }
 
+    async editImage(req: Request, res: Response) {
+        try {
+            const {name: imageName, tag, orientation} = req.body;
+        
+            const reqbody = {
+                name: imageName,
+                tag,
+                orientation,
+                path: ""
+            }
+
+            if(req.file) {
+                reqbody.path = req.file.filename;
+                const newFile = await galleryService.editImage(imageName, tag, orientation, reqbody.path)
+                res.status(200).json({message: "Imagem editada com sucesso"});
+            } else {
+                await galleryService.editImage(imageName, tag, orientation, null);
+                res.status(200).json({message: "Imagem editada com sucesso"});
+            }
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({message: "Erro ao editar imagem"});
+        }
+        
+    }
+        
 }
 
 export default new galleryController(); 
