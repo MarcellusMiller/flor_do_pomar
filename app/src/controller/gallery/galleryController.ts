@@ -1,16 +1,14 @@
 import { Request, Response } from "express";
 import galleryService from "../../services/gallery/galleryService.js";
-import dotenv from "dotenv";
-dotenv.config();
 
 class galleryController {
     async upload(req: Request, res: Response) {
         try {
             // Captura os dados enviados pelo front (incluindo a orientation string)
-            const { name, tag, orientation } = req.body;
+            const { name: imageName, tag, orientation } = req.body;
             
             const reqBody = {
-                name,
+                name: imageName,
                 tag,
                 orientation, // String passada pelo front ("portrait" ou "landscape")
                 path: ""
@@ -38,15 +36,22 @@ class galleryController {
         try {
             // Chama o serviço (você precisa adicionar o método getAll no galleryService)
             const images = await galleryService.getAll();
+            const GALLERY_PATH = "/storage/gallery/";
+            console.log("GET /gallery chamado");
+            console.log("images do banco:", images);
+            console.log("GALLERY_PATH:", GALLERY_PATH);
 
             // Mapeia para retornar a URL completa acessível pelo Nginx/Express
             const response = images.map((img: any) => ({
+                id: img.image_name,
                 name: img.image_name,
                 tag: img.tag,
-                url: `${process.env.GALLERY_PATH}${img.image_path}`, 
+                orientation: img.orientation,
+                url: `${GALLERY_PATH}${img.image_path}`, 
                 // Exemplo: http://localhost/gallery/filename.jpg
             }));
-
+            console.log("URL gerada:", `${GALLERY_PATH}${images[0]?.image_path}`);
+            console.log("GALLERY_PATH raw:", JSON.stringify(GALLERY_PATH));
             res.status(200).json(response);
         } catch (error) {
             console.log(error);

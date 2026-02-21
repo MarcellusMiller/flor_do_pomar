@@ -13,7 +13,7 @@ export async function uploadGalleryRepository(image: imageDTO) {
 }
 
 export async function getAllImagesRepository() {
-    const query = "SELECT id image_name, image_path, tag, orientation FROM gallery ORDER BY created_at DESC";
+    const query = "SELECT image_name, image_path, tag, orientation FROM gallery ORDER BY created_at DESC";
     try {
         const { rows } = await pool.query(query);
         return rows;
