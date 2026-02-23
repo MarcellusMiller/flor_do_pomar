@@ -25,17 +25,17 @@ class galleryService {
         return deletedImage;
     }
 
-    async editImage(name: string, tag: string, orientation: string, path: any) {
+    async editImage(author: string, description: object, path: any) {
         if(path) {
-            const current = await getImageByNameRepository(name);
+            const current = await getImageByNameRepository(author);
             if(current?.image_path) {
-                const pathImage = path.join(process.cwd(), "storage", "gallery", current.image_path);
+                const pathImage = join(process.cwd(), "storage", "gallery", current.image_path);
                 if (fs.existsSync(pathImage)) {
                     fs.unlinkSync(pathImage);
                 }
             }
         }
-        const editedImage = await editImageRepository(name, tag, orientation, path);
+        const editedImage = await editImageRepository(author, description, path);
         return editedImage;
     }
     

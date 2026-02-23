@@ -1,6 +1,10 @@
 export default interface imageDTO {
-    name: string;
+    author: string;
     path?: string;
-    tag: string
-    orientation: "portrait" | "landscape";
+    description: {
+        translations :[
+            {lang: "pt", text: string},
+            {lang: "en", text: string}
+        ]
+    }
 }
