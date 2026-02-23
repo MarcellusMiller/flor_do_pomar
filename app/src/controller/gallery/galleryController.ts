@@ -77,7 +77,9 @@
 
         async editImage(req: Request, res: Response) {
             try {
-                const {author, description_pt, description_en, id} = req.body;
+                const {id} = req.params;
+                const {author, description_pt, description_en} = req.body;
+
             
                 const description = {
                     translations: [
