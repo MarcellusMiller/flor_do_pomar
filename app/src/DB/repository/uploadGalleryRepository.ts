@@ -46,7 +46,7 @@ export async function editImageRepository(id: string, author: string, descriptio
         : "UPDATE gallery SET author=$1, description=$2 WHERE id=$3 RETURNING *";
 
     const values = path 
-        ? [newAuthor ?? author, JSON.stringify(description), path, author]
+        ? [newAuthor ?? author, JSON.stringify(description), path, id]
         : [newAuthor ?? author, JSON.stringify(description), id];
 
     try {
