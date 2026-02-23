@@ -45,7 +45,7 @@
 
                 // Mapeia para retornar a URL completa acessível pelo Nginx/Express
                 const response = images.map((img: any) => ({
-                    id: img.author,
+                    id: img.id,
                     author: img.author,
                     description: img.description,
                     url: `${GALLERY_PATH}${img.image_path}`, 
@@ -61,14 +61,14 @@
         }
         // todo: implementar método de delete, lembrando de deletar o arquivo do storage também
         async deleteImage(req: Request, res: Response) {
-            const {author} = req.params;
-            if(!author) {
+            const {id} = req.params;
+            if(!id) {
                 return res.status(400).json({message:
                     "Nome é obrigatorio"});
                 };
 
                 try {
-                    const deletedImage = await galleryService.deleteImage(author);
+                    const deletedImage = await galleryService.deleteImage(id);
                     res.status(200).json({message: "Imagem deletada com sucesso"});
                 } catch (error) {
                     return res.status(500).json({message: "Erro ao deletar imagem"});
@@ -77,7 +77,7 @@
 
         async editImage(req: Request, res: Response) {
             try {
-                const {author, description_pt, description_en} = req.body;
+                const {author, description_pt, description_en, id} = req.body;
             
                 const description = {
                     translations: [
@@ -88,10 +88,10 @@
                 }
 
                 if(req.file) {
-                    await galleryService.editImage(author, description, req.file.filename)
+                    await galleryService.editImage(author, description, req.file.filename, id )
                     res.status(200).json({message: "Imagem editada com sucesso"});
                 } else {
-                    await galleryService.editImage(author, description, null);
+                    await galleryService.editImage(author, description, null, id);
                     res.status(200).json({message: "Imagem editada com sucesso"});
                 }
             } catch (error) {

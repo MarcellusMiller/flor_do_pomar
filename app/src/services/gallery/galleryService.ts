@@ -1,4 +1,4 @@
-import { uploadGalleryRepository, getAllImagesRepository, deleteImageRepository, editImageRepository,getImageByNameRepository } from "../../DB/repository/uploadGalleryRepository.js";
+import { uploadGalleryRepository, getAllImagesRepository, deleteImageRepository, editImageRepository,getImageByIDRepository } from "../../DB/repository/uploadGalleryRepository.js";
 import imageDTO from "../../DTOS/Gallery/galleryDTO.js";
 import fs from "fs";
 import {join} from "path";
@@ -25,9 +25,9 @@ class galleryService {
         return deletedImage;
     }
 
-    async editImage(author: string, description: object, path: any) {
+    async editImage(author: string, description: object, path: any, id: string) {
         if(path) {
-            const current = await getImageByNameRepository(author);
+            const current = await getImageByIDRepository(id);
             if(current?.image_path) {
                 const pathImage = join(process.cwd(), "storage", "gallery", current.image_path);
                 if (fs.existsSync(pathImage)) {
@@ -35,7 +35,7 @@ class galleryService {
                 }
             }
         }
-        const editedImage = await editImageRepository(author, description, path);
+        const editedImage = await editImageRepository(id, author, description, path);
         return editedImage;
     }
     

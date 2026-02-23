@@ -13,7 +13,7 @@ export async function uploadGalleryRepository(image: imageDTO) {
 }
 
 export async function getAllImagesRepository() {
-    const query = "SELECT author, image_path, description FROM gallery ORDER BY created_at DESC";
+    const query = "SELECT author, image_path, description, id FROM gallery ORDER BY created_at DESC";
     try {
         const { rows } = await pool.query(query);
         return rows;
@@ -22,10 +22,10 @@ export async function getAllImagesRepository() {
     }
 }
 
-export async function deleteImageRepository(author: string) {
-    const query = "DELETE FROM gallery WHERE author = $1 RETURNING image_path";
+export async function deleteImageRepository(id: string) {
+    const query = "DELETE FROM gallery WHERE id = $1 RETURNING image_path";
     try {
-        const { rows } = await pool.query(query, [author]);
+        const { rows } = await pool.query(query, [id]);
         if (rows.length === 0) {
             throw new Error("Imagem não encontrada");
         }
@@ -34,20 +34,20 @@ export async function deleteImageRepository(author: string) {
         throw error;
     }
 }
-export async function getImageByNameRepository(author: string) {
-    const query = "SELECT image_path FROM gallery WHERE author = $1";
-    const { rows } = await pool.query(query, [author]);
+export async function getImageByIDRepository(id: string) {
+    const query = "SELECT image_path FROM gallery WHERE id = $1";
+    const { rows } = await pool.query(query, [id]);
     return rows[0];
 }
 
-export async function editImageRepository(author: string, description: object, path: any, newAuthor?: string) {
+export async function editImageRepository(id: string, author: string, description: object, path: any, newAuthor?: string) {
     const query = path 
-        ? "UPDATE gallery SET author=$1, description=$2, image_path=$3 WHERE author=$4 RETURNING *"
-        : "UPDATE gallery SET author=$1, description=$2 WHERE author=$3 RETURNING *";
+        ? "UPDATE gallery SET author=$1, description=$2, image_path=$3 WHERE id=$4 RETURNING *"
+        : "UPDATE gallery SET author=$1, description=$2 WHERE id=$3 RETURNING *";
 
     const values = path 
         ? [newAuthor ?? author, JSON.stringify(description), path, author]
-        : [newAuthor ?? author, JSON.stringify(description), author];
+        : [newAuthor ?? author, JSON.stringify(description), id];
 
     try {
         const { rows } = await pool.query(query, values);
