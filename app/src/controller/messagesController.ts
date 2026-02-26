@@ -4,44 +4,38 @@ import fs from "fs";
 import messageDayCoordination from "../services/messages/createdayCoordination.js";
 import nodeMailerService from "../services/mail/nodeMailerService.js";
 import messageWeddingPlanning from "../services/messages/createWeddingPlaningService.js";
+import { clientEmailTemplate } from "../services/mail/template/clientEmail.js";
+import { adminEmailTemplate } from "../services/mail/template/adminEmail.js";
 
 class messageController{
 
-    private notifyAdmin = async (senderName: string, email: string, type: string, message: string) => {
-
-        await nodeMailerService.send(
-            process.env.MAIL_USER!, // email do admin (o seu próprio por enquanto)
-            `Nova mensagem recebida - ${type}`,
-            `Você recebeu uma nova mensagem de ${senderName} (${email}):\n\n${message}`,
-            `
-                <h2>Nova mensagem recebida!</h2>
-                <p><strong>Nome:</strong> ${senderName}</p>
-                <p><strong>Email:</strong> ${email}</p>
-                <p><strong>Tipo:</strong> ${type}</p>
-                <p><strong>Mensagem:</strong> ${message}</p>
-            `
-        );
-    }
     private notifyClient = async (to: string, senderName: string, type: string) => {
+        const typeLabel: Record<string, string> = {
+            decoration: "Decoração",
+            weddingPlanning: "Planejamento de Casamento",
+            dayCoordination: "Coordenação do Dia",
+        };
+        await nodeMailerService.send(
+            to,
+            "Recebemos sua mensagem!",
+            `Olá ${senderName}, recebemos a sua mensagem e encontraremos em contato em breve`,
+            clientEmailTemplate(senderName, typeLabel[type] ?? type)
+        )
+    }
+    private notifyAdmin = async (senderName: string,email: string, type: string, message: string) => {
 
     const typeLabel: Record<string, string> = {
         decoration: "Decoração",
         weddingPlanning: "Planejamento de Casamento",
         dayCoordenation: "Coordenação do Dia"
     };
-
     await nodeMailerService.send(
-            to,
-            "Recebemos a sua mensagem!",
-            `Olá ${senderName}, recebemos a sua mensagem e entraremos em contato em breve.`,
-            `
-                <h2>Olá, ${senderName}!</h2>
-                <p>Recebemos a sua mensagem sobre <strong>${typeLabel[type] ?? type}</strong>.</p>
-                <p>Entraremos em contacto em breve.</p>
-                <br/>
-                <p>Obrigado pelo contacto!</p>
-            `
-        );
+        process.env.MAIL_USER!,
+        `Nova mensagem recebida - ${type}`,
+        `Nova mensagem recebida de ${senderName}, (${email}), ${message}`,
+        adminEmailTemplate(senderName, email, type, message)
+    )
+    
     }
 
     createMessage = async (req: Request, res: Response) => {
