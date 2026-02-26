@@ -1,18 +1,20 @@
 import nodemailer from "nodemailer";
+import dotenv from "dotenv"
+
+dotenv.config();
 
 class nodeMailerService {
     private transporter: nodemailer.Transporter | null = null;
 
     async transport() {
         if (!this.transporter) {
-            const testEmail = await nodemailer.createTestAccount();
             this.transporter = nodemailer.createTransport({
-                host: testEmail.smtp.host,
-                port: testEmail.smtp.port,
-                secure: testEmail.smtp.secure,
+                host: process.env.MAIL_HOST,
+                port: Number(process.env.MAIL_PORT),
+                secure: process.env.MAIL_SECURE === "true",
                 auth: {
-                    user: testEmail.user,
-                    pass: testEmail.pass,
+                    user: process.env.MAIL_USER,
+                    pass: process.env.MAIL_PASSWORD,
                 },
             });
         }
@@ -22,13 +24,13 @@ class nodeMailerService {
     async send(to: string, subject: string, text: string, html: string) {
         const transporter = await this.transport();
         const info = await transporter.sendMail({
-            from: '"Test sender" <test@example.com>',
+            from: `"Test Sender" <${process.env.MAIL_USER}>`,
             to,
             subject,
             text,
             html, 
         });
-        console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+        console.log("Email enviado:", info.messageId);
         return info;
     }
 }
