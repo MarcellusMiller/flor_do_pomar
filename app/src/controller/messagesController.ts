@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import messageDecoration from "../services/messages/createDecorationService.js";
-import messagePlanning from "../services/messages/createWeddingPlaningService.js";
 import fs from "fs";
 import messageDayCoordination from "../services/messages/createdayCoordination.js";
 import nodeMailerService from "../services/mail/nodeMailerService.js";
+import messageWeddingPlanning from "../services/messages/createWeddingPlaningService.js";
 
 class messageController{
 
@@ -71,54 +71,30 @@ class messageController{
             if(!body || !body.senderName || !body.email || !body.phone || !body.type || !body.message || !body.type_of_event){ 
                 return res.status(400).json({message: "Dados incompletos"});
             } 
-            // logica para criação de mensagem de decoration
-            else if(body.type === "decoration"){
-                const service = new messageDecoration();
-                const result = await service.createMessage(body)
+            let result;
+            let responseMessage;
 
-                Promise.all([
-                    this.notifyAdmin(body.senderName, body.email, body.type, body.message),
-                    this.notifyClient(body.email, body.senderName, body.type)
-                ]).catch(err => console.error("Erro ao enviar emails", err));
-
-                return res.status(201).json({
-                    message: "Mensagem de decoratin criada com sucesso", 
-                    data: result
-                });
-            } 
-            // to do para mensagem de tipo planing
-            else if(body.type === "weddingPlanning"){
-                const service = new messagePlanning();
-                const result = await service.createMessage(body);
-                
-                Promise.all([
-                    this.notifyAdmin(body.senderName, body.email, body.type, body.message),
-                    this.notifyClient(body.email, body.senderName, body.type)
-                ]).catch(err => console.error("Erro ao enviar emails", err));
-
-                return res.status(201).json({
-                    message: "Mensagem de planejamento criada com sucesso",
-                    data: result });
-            }
-            // to do para mensagem de cordenação do dia
-            else if(body.type === "dayCoordenation"){
-                const service = new messageDayCoordination();
-                const result = await service.createMessage(body);
-
-                Promise.all([
-                    this.notifyAdmin(body.senderName, body.email, body.type, body.message),
-                    this.notifyClient(body.email, body.senderName, body.type)
-                ]).catch(err => console.error("Erro ao enviar emails", err));
-
-                return res.status(201).json({
-                    message: "Mensagem de coordenação do dia criada com sucesso",
-                    data: result
-                });
-            }
-            else {
+            if(body.type === "decoration") {
+                result = await new messageDecoration().createMessage(body);
+                responseMessage = "Mensagem de decoration criada com sucesso";
+            } else if(body.type === "weddingPlanning") {
+                result = await new messageWeddingPlanning().createMessage(body);
+                responseMessage = "Mensagem de planejamento criada com sucesso";
+            } else if(body.type === "dayCoordenation") {
+                result = await new messageDayCoordination().createMessage(body);
+                responseMessage = "Mensagem de coordenação do dia criada com sucesso";
+            } else {
                 return res.status(400).json({message: "Tipo de mensagem inválido"});
             }
+
+            Promise.all([
+                this.notifyAdmin(body.senderName, body.email, body.type, body.message),
+                this.notifyClient(body.email, body.senderName, body.type)
+            ]).catch(err => console.error("Erro ao enviar emails", err));
+
+            return res.status(201).json({ message: responseMessage, data: result });
         } catch (error:any) {
+
             console.error("Erro no createMessage:", error.message, error.stack);
             return res.status(500).json({message: error.message});
         }
