@@ -19,7 +19,6 @@ router.get("/health", (req, res) => {
 router.post("/message",
     uploadMiddleware.array("image", 5),
     messageController.createMessage,
-    // sendTestEmailController.send
 );
 
 

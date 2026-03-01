@@ -1,11 +1,11 @@
 interface createMessageDTO {
-    type: "decoration" | "weddingPlanning" | "dayCoordenation";
+    type: "decoration" | "weddingPlanning" | "dayCoordenation" | "other";
    
     senderName : string;
     email: string;
     phone: string;
     message : string;
-    type_of_event : "casamento" | "aniversario" | "formatura" | "batizado";
+    type_of_event : "casamento" | "aniversario" | "formatura" | "batizado" | "other";
     // Campos opcionais 
     
     localEvent? : string;

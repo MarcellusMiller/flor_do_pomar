@@ -4,9 +4,19 @@ import listMessagesService from "../../services/admin/listMessagesService.js";
 import listSingleMessage from "../../services/admin/listSingleMessage.js";
 import deleteMessage from "../../services/admin/deleteMessage.js";
 
+const typeLabels: Record<string, string> = {
+    weddingPlanning: 'Wedding Planning',
+    decoration: 'Decoração',
+    dayCoordenation: 'Coordenação do Dia',
+    other: 'Outro',
+}
+
 
 class adminController {
+    
     async ListMessages(req: Request, res: Response) {
+        
+        
         // paginação 
         const page = parseInt(req.query.page as string) || parseInt(req.params.page) || 1;
         const limit = 5;
@@ -25,9 +35,14 @@ class adminController {
         // messages que é a chamada da função com filtros como parametro
         const messages = await listMessagesService.execute(filters, limit, offset);
 
+        const mappedRows = messages.rows.map((msg: any) => ({
+            ...msg,
+            type: typeLabels[msg.type] ?? msg.type,
+        }))
+
         return res.status(200).json({
             message: "Mensagens listadas com sucesso",
-            data: messages.rows,
+            data: mappedRows,
             pagination: {
                 total: messages.total,
                 page,
@@ -38,6 +53,12 @@ class adminController {
     }
     async ListSingleMessage(req: Request, res: Response) {
         try {
+            const typeLabels: Record<string, string> = {
+                weddingPlanning: 'Wedding Planning',
+                decoration: 'Decoração',
+                dayCoordenation: 'Coordenação do Dia',
+                other: 'Outro',
+            }
             const {id} = req.params;
             // tem q esperar pelo service com a mensagem
             if(!id) {
@@ -52,7 +73,7 @@ class adminController {
 
             return res.status(200).json({
                 message: "Mensagem obtida com sucesso",
-                data: message
+                data: { ...message, type: typeLabels[message.type] ?? message.type }
             })
         } catch(error) {
             console.log(error)

@@ -6,6 +6,7 @@ import nodeMailerService from "../services/mail/nodeMailerService.js";
 import messageWeddingPlanning from "../services/messages/createWeddingPlaningService.js";
 import { clientEmailTemplate } from "../services/mail/template/clientEmail.js";
 import { adminEmailTemplate } from "../services/mail/template/adminEmail.js";
+import genericMessage from "../services/messages/genericMessage.js";
 
 class messageController{
 
@@ -77,7 +78,11 @@ class messageController{
             } else if(body.type === "dayCoordenation") {
                 result = await new messageDayCoordination().createMessage(body);
                 responseMessage = "Mensagem de coordenação do dia criada com sucesso";
-            } else {
+            } else if(body.type === "other") {
+                result = await new genericMessage().createMessage(body);
+                responseMessage = "Mesagem criada com sucesso"
+            }
+             else {
                 return res.status(400).json({message: "Tipo de mensagem inválido"});
             }
 
