@@ -1,5 +1,5 @@
 interface listMessagesFilterDTO {
-    isOpen?: boolean;
+    status?: 'new' | 'viewed' | 'responded';
     type?: string;
     order?: "asc" | "desc";
 }

@@ -5,7 +5,7 @@ class listMessagesService {
     // função que vai ser utilizada no controller
     async execute(filters: listMessagesFilterDTO, limit: number, offset: number) {
         const finalFilters: listMessagesFilterDTO = {
-            isOpen: filters.isOpen, //valor default
+            status: filters.status,
             type: filters.type,
             order: filters.order ?? "desc",
         };

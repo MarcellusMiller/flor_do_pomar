@@ -3,13 +3,23 @@ import listMessagesFilterDTO from "../../DTOS/listMessagesFilterDTO.js";
 import listMessagesService from "../../services/admin/listMessagesService.js";
 import listSingleMessage from "../../services/admin/listSingleMessage.js";
 import deleteMessage from "../../services/admin/deleteMessage.js";
-
+import getStatusService from "../../services/admin/getStatus.js";
+import updateMessageStatusService from "../../services/admin/updateMessageStatusService.js";
 const typeLabels: Record<string, string> = {
     weddingPlanning: 'Wedding Planning',
     decoration: 'Decoração',
     dayCoordenation: 'Coordenação do Dia',
     other: 'Outro',
 }
+
+const eventTypeLabels: Record<string, string> = {
+    aniversario: 'Aniversário',
+    batizado: 'Batizado',
+    casamento: 'Casamento',
+    formatura: 'Formatura',
+    other: 'Outro',
+}
+
 
 
 class adminController {
@@ -24,12 +34,8 @@ class adminController {
         
         // filtro basicos para as mensagens
         const filters: listMessagesFilterDTO = {
-            isOpen: req.query.isOpen != undefined
-            ? req.query.isOpen === "true"
-            : undefined,
-
+            status: req.query.status as 'new' | 'viewed' | 'responded' | undefined,
             type: req.query.type as string | undefined,
-
             order: req.query.order as "asc" | "desc" | undefined,
         };
         // messages que é a chamada da função com filtros como parametro
@@ -73,7 +79,11 @@ class adminController {
 
             return res.status(200).json({
                 message: "Mensagem obtida com sucesso",
-                data: { ...message, type: typeLabels[message.type] ?? message.type }
+                data: { 
+                    ...message, 
+                    type: typeLabels[message.type] ?? message.type,
+                    type_of_event: eventTypeLabels[message.type_of_event] ?? message.type_of_event
+                }
             })
         } catch(error) {
             console.log(error)
@@ -96,6 +106,33 @@ class adminController {
             data: deletedMessage
         })
    }
+   async getMessagesStats(req: Request, res: Response) {
+        try {
+            const status = await getStatusService.execute();
+            return res.status(200).json({ data: status });
+        } catch(error) {
+            return res.status(500).json({ message: "Erro ao buscar estatísticas" });
+        }
+    }
+    async updateMessageStatus(req: Request, res: Response) {
+    try {
+        const { id } = req.params;
+        const { status } = req.body;
+
+        if (!id) return res.status(400).json({ message: "ID é obrigatório" });
+        if (!['new', 'viewed', 'responded'].includes(status)) {
+            return res.status(400).json({ message: "Status inválido" });
+        }
+
+        const updated = await updateMessageStatusService.execute(id, status);
+        if (!updated) return res.status(404).json({ message: "Mensagem não encontrada" });
+
+        return res.status(200).json({ message: "Status atualizado", data: updated });
+    } catch(error) {
+        return res.status(500).json({ message: "Erro ao atualizar status" });
+    }
+    }
+
 }
 
 export default new adminController()

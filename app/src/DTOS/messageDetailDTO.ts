@@ -6,7 +6,7 @@ interface MessageDetailDTO {
     type: string;
     message: string;
     imageUrl?: string;
-    isOpen: boolean;
+    status: 'new' | 'viewed' | 'responded';
     createdAt: Date;
     dateOfEvent?: Date;
 }

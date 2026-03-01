@@ -8,10 +8,10 @@ class messagesRepository {
     const values: any[] = [];
 
     // 1. Construção dinâmica dos filtros
-    if (filters.isOpen !== undefined) {
-      values.push(filters.isOpen);
-      conditions.push(`is_open = $${values.length}`);
-    }
+    if (filters.status) {
+      values.push(filters.status);
+      conditions.push(`status = $${values.length}`);
+    } 
     if (filters.type) {
       values.push(filters.type);
       conditions.push(`type = $${values.length}`);
@@ -34,7 +34,7 @@ class messagesRepository {
 
     const dataQuery = `
       SELECT
-        id, sender_name, type, is_open, created_at,
+        id, sender_name, type, status, created_at,
         phone, email, local_event, message, date_of_event
       FROM messages
       ${whereClause}
@@ -64,7 +64,7 @@ class messagesRepository {
         type,
         local_event,
         type_of_event,
-        is_open,
+        status,
         created_at,
         image_path,
         TO_CHAR(date_of_event, 'YYYY-MM-DD') as date_of_event
@@ -76,16 +76,14 @@ class messagesRepository {
     return rows[0] ?? null;
   }
     
-  async markAsOpen(id: string) {
-    const query = `UPDATE messages SET is_open = true WHERE id = $1`;
-    const value = [id];
-
-    const {rows} = await pool.query(query, value);
-    return rows
+  async updateStatus(id: string, status: 'new' | 'viewed' | 'responded') {
+    const query = `UPDATE messages SET status = $1 WHERE id = $2 RETURNING status`;
+    const { rows } = await pool.query(query, [status, id]);
+    return rows[0];
   }
 
   async deleteMessage(id: string) {
-    const query = `DELETE FROM messages WHERE id = $1 RETURNING id, sender_name, type, is_open, created_at`;
+    const query = `DELETE FROM messages WHERE id = $1 RETURNING id, sender_name, type, created_at`;
     const value = [id];
 
     const {rows} = await pool.query(query, value);
@@ -136,6 +134,22 @@ class messagesRepository {
         }
         
     }
+
+    async getMessagesStats() {
+        try {
+            const { rows } = await pool.query(`
+                SELECT 
+                  COUNT(*) FILTER (WHERE status = 'new') as new,
+                  COUNT(*) FILTER (WHERE status = 'viewed') as viewed,
+                  COUNT(*) FILTER (WHERE status = 'responded') as responded
+                FROM messages
+            `);
+            return rows[0];
+        } catch(error) {
+            throw new Error(`Error search total messages ${error}`);
+        }
+    }
+    
 }
 
 export default new messagesRepository();

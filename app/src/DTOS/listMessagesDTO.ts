@@ -2,7 +2,7 @@ interface listMessagesDTO {
     id: string;
     senderName: string;
     type: string;
-    isOpen: boolean;
+    status: "new" | "viewed" | "responded";
     createdAt: Date;
 }
 

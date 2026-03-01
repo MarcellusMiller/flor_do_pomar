@@ -27,6 +27,11 @@ router.get("/admin/messages",
     adminController.ListMessages
 );
 
+router.get("/messages-stats", 
+    adminAuth,
+    adminController.getMessagesStats,
+)
+
 router.get("/admin/messages/:id", 
     adminAuth,
     adminController.ListSingleMessage
@@ -36,6 +41,8 @@ router.delete("/admin/delete/messages/:id",
     adminAuth,
     adminController.deleteMessage
 );
+
+router.patch("/messages/:id/status", adminAuth, adminController.updateMessageStatus)
 
 router.post("/admin/login",
     adminLoginController.login
