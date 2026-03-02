@@ -6,6 +6,7 @@ import { adminAuth } from "./middleware/adminMiddleware.js";
 import adminLoginController from "./controller/admin/adminLoginController.js";
 import galleryController from "./controller/gallery/galleryController.js";
 import uploadGallery from "./middleware/uploadGalleryMiddleware.js";
+import analyticsController from "./controller/GA4/analyticsController.js";
 const router = Router();
 
 // rotas da aplicação
@@ -72,6 +73,11 @@ router.patch("/gallery/edit/:id",
     adminAuth,
     uploadGallery.single("image"),
     galleryController.editImage
-) 
+);
+
+router.get("/admin/analytics", 
+    adminAuth, 
+    analyticsController.getAnalytics
+);
 
 export default router;

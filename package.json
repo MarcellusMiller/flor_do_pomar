@@ -16,6 +16,7 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
+    "@google-analytics/data": "^5.2.1",
     "@types/bcrypt": "^6.0.0",
     "@types/mime": "^3.0.4",
     "@types/multer": "^2.0.0",
