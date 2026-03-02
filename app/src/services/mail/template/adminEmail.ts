@@ -1,4 +1,4 @@
-export const adminEmailTemplate = (senderName: string, email: string, type: string, message: string) => `
+export const adminEmailTemplate = (senderName: string, email: string, type: string, message: string, phone: string) => `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #f9f9f9; padding: 20px;">
         <div style="background-color: #ffffff; border-radius: 8px; padding: 40px;">
             
@@ -12,6 +12,10 @@ export const adminEmailTemplate = (senderName: string, email: string, type: stri
                 <tr>
                     <td style="padding: 10px; border-bottom: 1px solid #eee; color: #888;">Email</td>
                     <td style="padding: 10px; border-bottom: 1px solid #eee; color: #333;">${email}</td>
+                </tr>
+                 <tr>
+                    <td style="padding: 10px; border-bottom: 1px solid #eee; color: #888;">Telefone</td>
+                    <td style="padding: 10px; border-bottom: 1px solid #eee; color: #333;">${phone}</td>
                 </tr>
                 <tr>
                     <td style="padding: 10px; border-bottom: 1px solid #eee; color: #888;">Tipo</td>

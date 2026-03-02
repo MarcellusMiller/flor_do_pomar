@@ -4,40 +4,55 @@ import fs from "fs";
 import messageDayCoordination from "../services/messages/createdayCoordination.js";
 import nodeMailerService from "../services/mail/nodeMailerService.js";
 import messageWeddingPlanning from "../services/messages/createWeddingPlaningService.js";
-import { clientEmailTemplate } from "../services/mail/template/clientEmail.js";
+import { clientEmailPTTemplate, clientEmailENTemplate } from "../services/mail/template/clientEmail.js";
 import { adminEmailTemplate } from "../services/mail/template/adminEmail.js";
 import genericMessage from "../services/messages/genericMessage.js";
 
 class messageController{
 
-    private notifyClient = async (to: string, senderName: string, type: string) => {
-        const typeLabel: Record<string, string> = {
-            decoration: "Decoração",
-            weddingPlanning: "Planejamento de Casamento",
-            dayCoordination: "Coordenação do Dia",
-        };
+    private typeLabelPT: Record<string, string> = {
+        planning: "Planeamento",
+        decoration: "Decoração",
+        weddingPlanning: "Planejamento",
+        dayCoordenation: "Coordenação do Dia",
+        other: "Outro"
+    };
+
+    private typeLabelEN: Record<string, string> = {
+        planning: "Planning",
+        decoration: "Decoration",
+        weddingPlanning: "Wedding Planning",
+        dayCoordenation: "Day Coordination",
+        other: "Other",
+    };
+
+    private notifyClient = async (to: string, senderName: string, type: string, language: string) => {
+        
+        const isPT = language === "pt";
+        const typeLabel = isPT ? (this.typeLabelPT[type] ?? type) : (this.typeLabelEN[type] ?? type);
         await nodeMailerService.send(
             to,
-            "Recebemos sua mensagem!",
-            `Olá ${senderName}, recebemos a sua mensagem e encontraremos em contato em breve`,
-            clientEmailTemplate(senderName, typeLabel[type] ?? type)
-        )
+            isPT ? `Recebemos sua mensagem sobre ${typeLabel}!` : `We received your message about ${typeLabel}!`,
+            isPT
+                ? `Olá ${senderName}, recebemos a sua mensagem e entraremos em contacto em breve.`
+                : `Hello ${senderName}, we received your message and will get back to you shortly.`,
+            isPT
+                ? clientEmailPTTemplate(senderName, typeLabel)
+                : clientEmailENTemplate(senderName, typeLabel),
+            isPT ? "Flor Do Pomar - Recebemos a sua mensagem!" : "Flor Do Pomar - We received your message!"
+        );
     }
-    private notifyAdmin = async (senderName: string,email: string, type: string, message: string) => {
 
-    const typeLabel: Record<string, string> = {
-        decoration: "Decoração",
-        weddingPlanning: "Planejamento de Casamento",
-        dayCoordenation: "Coordenação do Dia"
-    };
-    await nodeMailerService.send(
-        process.env.MAIL_USER!,
-        `Nova mensagem recebida - ${type}`,
-        `Nova mensagem recebida de ${senderName}, (${email}), ${message}`,
-        adminEmailTemplate(senderName, email, type, message)
-    )
-    
+    private notifyAdmin = async (senderName: string, email: string, type: string, message: string, phone: string) => {
+        await nodeMailerService.send(
+            process.env.MAIL_USER!,
+            `Nova mensagem recebida - ${senderName}`,
+            `Nova mensagem recebida de ${senderName} (${email}): ${message}`,
+            adminEmailTemplate(senderName, email, this.typeLabelPT[type], message, phone),
+            "Flor Do Pomar - Nova Mensagem"
+        );
     }
+    
 
     createMessage = async (req: Request, res: Response) => {
         // uso do try para tratar erros
@@ -72,7 +87,8 @@ class messageController{
             if(body.type === "decoration") {
                 result = await new messageDecoration().createMessage(body);
                 responseMessage = "Mensagem de decoration criada com sucesso";
-            } else if(body.type === "weddingPlanning") {
+            } else if(body.type === "weddingPlanning" || body.type === "planning") {
+                body.type = "weddingPlanning";
                 result = await new messageWeddingPlanning().createMessage(body);
                 responseMessage = "Mensagem de planejamento criada com sucesso";
             } else if(body.type === "dayCoordenation") {
@@ -87,8 +103,8 @@ class messageController{
             }
 
             Promise.all([
-                this.notifyAdmin(body.senderName, body.email, body.type, body.message),
-                this.notifyClient(body.email, body.senderName, body.type)
+                this.notifyAdmin(body.senderName, body.email, body.type, body.message, body.phone),
+                this.notifyClient(body.email, body.senderName, body.type, body.language ?? "pt")
             ]).catch(err => console.error("Erro ao enviar emails", err));
 
             return res.status(201).json({ message: responseMessage, data: result });

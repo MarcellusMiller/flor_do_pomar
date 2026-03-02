@@ -1,6 +1,5 @@
 interface createMessageDTO {
     type: "decoration" | "weddingPlanning" | "dayCoordenation" | "other";
-   
     senderName : string;
     email: string;
     phone: string;

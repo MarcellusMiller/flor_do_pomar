@@ -6,6 +6,14 @@ dotenv.config();
 class nodeMailerService {
     private transporter: nodemailer.Transporter | null = null;
 
+    private logoAttachment = {
+        filename: "logo.png",
+        path: "/app/storage/logo/logo.png",
+        cid: "logo@flordopomar",
+        contentDisposition: "inline" as const,
+        encoding: "base64",
+    };
+
     async transport() {
         if (!this.transporter) {
             this.transporter = nodemailer.createTransport({
@@ -21,14 +29,15 @@ class nodeMailerService {
         return this.transporter!;
     }
 
-    async send(to: string, subject: string, text: string, html: string) {
+    async send(to: string, subject: string, text: string, html: string, fromName: string = "Flor do Pomar") {
         const transporter = await this.transport();
         const info = await transporter.sendMail({
-            from: `"Test Sender" <${process.env.MAIL_USER}>`,
+            from: `${fromName} <${process.env.MAIL_USER}>`,
             to,
             subject,
             text,
-            html, 
+            html,
+            attachments: [this.logoAttachment]
         });
         console.log("Email enviado:", info.messageId);
         return info;
