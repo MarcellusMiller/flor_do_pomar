@@ -48,6 +48,9 @@ router.patch("/messages/:id/status", adminAuth, adminController.updateMessageSta
 router.post("/admin/login",
     adminLoginController.login
 );
+router.post("/admin/logout", 
+    adminAuth, 
+    adminLoginController.logout);
 
 router.get("/admin/verify", adminAuth, (req, res) => {
     return res.status(200).json({ status: "ok" });

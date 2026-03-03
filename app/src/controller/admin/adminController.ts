@@ -86,7 +86,7 @@ class adminController {
                     type: typeLabels[message.type] ?? message.type,
                     type_of_event: eventTypeLabels[message.type_of_event] ?? message.type_of_event,
                     date_of_event: message.date_of_event ?? "Não definida",
-                    local_of_event: message.local_of_event ?? "Não definida",
+                    local_of_event: message.local_of_event ?? "Não há local definido",
                 }
             })
         } catch(error) {
