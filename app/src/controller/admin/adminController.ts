@@ -65,6 +65,8 @@ class adminController {
                 dayCoordenation: 'Coordenação do Dia',
                 other: 'Outro',
             }
+
+
             const {id} = req.params;
             // tem q esperar pelo service com a mensagem
             if(!id) {
@@ -76,13 +78,15 @@ class adminController {
             if(!message) {
                 return res.status(404).json({message: "Mensagem não encontrada"})
             }
-
             return res.status(200).json({
+    
                 message: "Mensagem obtida com sucesso",
                 data: { 
                     ...message, 
                     type: typeLabels[message.type] ?? message.type,
-                    type_of_event: eventTypeLabels[message.type_of_event] ?? message.type_of_event
+                    type_of_event: eventTypeLabels[message.type_of_event] ?? message.type_of_event,
+                    date_of_event: message.date_of_event ?? "Não definida",
+                    local_of_event: message.local_of_event ?? "Não definida",
                 }
             })
         } catch(error) {

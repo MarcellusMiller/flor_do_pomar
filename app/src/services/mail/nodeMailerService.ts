@@ -11,7 +11,10 @@ class nodeMailerService {
         path: "/app/storage/logo/logo.png",
         cid: "logo@flordopomar",
         contentDisposition: "inline" as const,
-        encoding: "base64",
+        encoding: "base64", 
+        headers: {
+            "Content-ID": "<logo@flordopomar>",
+        }
     };
 
     async transport() {
