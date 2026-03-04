@@ -30,6 +30,7 @@ export async function getAnalyticsData(period: TimeFilter) {
     ctaData,
     abandonedData,
     avgDurationData,
+    submittedData,
   ] = await Promise.all([
     posthogQuery({ kind: "TrendsQuery", series: [{ event: "$pageview", math: "total" }], dateRange: { date_from: dateFrom } }),
     posthogQuery({ kind: "TrendsQuery", series: [{ event: "$pageview", math: "dau" }], dateRange: { date_from: dateFrom } }),
@@ -39,13 +40,19 @@ export async function getAnalyticsData(period: TimeFilter) {
     posthogQuery({ kind: "TrendsQuery", series: [{ event: "contact_cta_clicked", math: "total" }], dateRange: { date_from: dateFrom } }),
     posthogQuery({ kind: "TrendsQuery", series: [{ event: "contact_form_abandoned", math: "total" }], dateRange: { date_from: dateFrom } }),
     posthogQuery({ kind: "TrendsQuery", series: [{ event: "$pageview", math: "median", math_property: "$session_duration" }], dateRange: { date_from: dateFrom } }),
+      posthogQuery({ kind: "TrendsQuery", series: [{ event: "contact_form_submitted", math: "total" }], dateRange: { date_from: dateFrom } }),
   ]);
 
   const totalViews = viewsData.results?.[0]?.count ?? 0;
   const totalUsers = uniqueData.results?.[0]?.count ?? 0;
   const ctaClicks = ctaData.results?.[0]?.count ?? 0;
   const formAbandoned = abandonedData.results?.[0]?.count ?? 0;
+  const formSubmitted = submittedData.results?.[0]?.count ?? 0;
 
+  const conversionRate = ctaClicks > 0
+    ? `${Math.round((formSubmitted / ctaClicks) * 100)}%`
+    : "—";
+    
   const abandonRate = ctaClicks > 0
     ? `${Math.round((formAbandoned / ctaClicks) * 100)}%`
     : "—";
@@ -72,6 +79,8 @@ export async function getAnalyticsData(period: TimeFilter) {
       totalViews,
       totalUsers,
       ctaClicks,
+      formSubmitted,
+      conversionRate, 
       abandonRate,
       avgDuration,
       trends,
