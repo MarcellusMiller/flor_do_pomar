@@ -6,7 +6,7 @@ import { adminAuth } from "./middleware/adminMiddleware.js";
 import adminLoginController from "./controller/admin/adminLoginController.js";
 import galleryController from "./controller/gallery/galleryController.js";
 import uploadGallery from "./middleware/uploadGalleryMiddleware.js";
-import analyticsController from "./controller/GA4/analyticsController.js";
+import analyticsController from "./controller/analytics/analyticsController.js";
 const router = Router();
 
 // rotas da aplicação

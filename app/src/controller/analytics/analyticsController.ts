@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { getAnalyticsData } from "../../services/GA4/analyticsService.js";
+import { getAnalyticsData } from "../../services/analytics/analyticsService.js";
 
 type TimeFilter = "7d" | "30d" | "3m" | "6m" | "12m";
 
@@ -18,7 +18,7 @@ const analyticsController = {
       return res.status(200).json(data);
     } catch (error) {
       console.error("Erro ao buscar dados do Analytics:", error);
-      return res.status(500).json({ error: "Erro ao buscar dados do Google Analytics" });
+      return res.status(500).json({ error: "Erro ao buscar dados do PostHog" });
     }
   },
 };
