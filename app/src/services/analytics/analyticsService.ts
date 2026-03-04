@@ -1,5 +1,6 @@
 import { posthogQuery } from "./posthogClient.js";
-import { transformPages, transformReferrers, transformDaily } from "./analyticsTransformer.js";
+import { transformPages, transformReferrers, transformDaily, transformLanguages } from "./analyticsTransformer.js";
+import { getSnapshot, getPreviousMonthPeriod } from "../../DB/repository/analyticsSnapshotRepository.js";
 
 export type TimeFilter = "7d" | "30d" | "3m" | "6m" | "12m";
 
@@ -10,6 +11,12 @@ const dateRangeMap: Record<TimeFilter, string> = {
   "6m": "-180d",
   "12m": "-365d",
 };
+
+function calcTrend(current: number, previous: number): { value: number; positive: boolean } {
+  if (!previous || previous === 0) return { value: 0, positive: true };
+  const diff = ((current - previous) / previous) * 100;
+  return { value: Math.abs(Math.round(diff)), positive: diff >= 0 };
+}
 
 export async function getAnalyticsData(period: TimeFilter) {
   const dateFrom = dateRangeMap[period];
@@ -50,6 +57,16 @@ export async function getAnalyticsData(period: TimeFilter) {
     ? `${minutes}:${seconds.toString().padStart(2, "0")}`
     : "—";
 
+  // busca snapshot do mês anterior para calcular tendência
+  const previousPeriod = await getPreviousMonthPeriod();
+  const snapshot = await getSnapshot(previousPeriod);
+
+  const trends = {
+    totalViews: calcTrend(totalViews, snapshot?.total_views ?? 0),
+    totalUsers: calcTrend(totalUsers, snapshot?.total_users ?? 0),
+    ctaClicks: calcTrend(ctaClicks, snapshot?.cta_clicks ?? 0),
+  };
+
   return {
     stats: {
       totalViews,
@@ -57,9 +74,11 @@ export async function getAnalyticsData(period: TimeFilter) {
       ctaClicks,
       abandonRate,
       avgDuration,
+      trends,
     },
     pages: transformPages(pagesData.results, totalViews),
+    languages: transformLanguages(pagesData.results), // 👈 reutiliza pagesData
     referrers: transformReferrers(referrersData.results),
     daily: transformDaily(dailyData.results),
-  };
+};
 }
