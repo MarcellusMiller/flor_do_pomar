@@ -25,6 +25,71 @@ const routeLabels: Record<string, string> = {
   "/en/privacy": "Política de Privacidade",
 }
 
+export function transformDevices(results: any[]) {
+    const colors: Record<string, string> = {
+        Desktop: "bg-blue-500",
+        Mobile: "bg-pink-500",
+        Tablet: "bg-yellow-500",
+    }
+    const total = (results ?? []).reduce((acc, r) => acc + (r.count ?? 0), 0) || 1
+
+    return (results ?? [])
+        .sort((a, b) => b.count - a.count)
+        .map((r) => ({
+            device: r.breakdown_value ?? "Desconhecido",
+            visits: r.count ?? 0,
+            percentage: Math.round(((r.count ?? 0) / total) * 100),
+            color: colors[r.breakdown_value] ?? "bg-gray-500",
+        }))
+}
+
+export function transformCountries(results: any[]) {
+    const total = (results ?? []).reduce((acc, r) => acc + (r.count ?? 0), 0) || 1
+
+    return (results ?? [])
+        .sort((a, b) => b.count - a.count)
+        .slice(0, 5)
+        .map((r) => ({
+            country: r.breakdown_value ?? "Desconhecido",
+            visits: r.count ?? 0,
+            percentage: Math.round(((r.count ?? 0) / total) * 100),
+        }))
+}
+
+export function transformCtaSources(results: any[]) {
+    const sourceLabels: Record<string, string> = {
+        sidebar: "Menu Lateral",
+        weedingPlanner: "Wedding Planner",
+        "about-page": "Sobre Nós",
+        decoration: "Decoração",
+    }
+    const total = (results ?? []).reduce((acc, r) => acc + (r.count ?? 0), 0) || 1
+
+    return (results ?? [])
+        .sort((a, b) => b.count - a.count)
+        .map((r) => ({
+            source: sourceLabels[r.breakdown_value] ?? r.breakdown_value ?? "Desconhecido",
+            clicks: r.count ?? 0,
+            percentage: Math.round(((r.count ?? 0) / total) * 100),
+        }))
+}
+
+export function transformFunnel(results: any[]) {
+    const labels: Record<string, string> = {
+        wedding_planner_viewed: "Wedding Planner",
+        portfolio_viewed: "Portfólio",
+        about_viewed: "Sobre Nós",
+        contact_cta_clicked: "CTA Clicado",
+        contact_form_submitted: "Formulário Enviado",
+    }
+
+    return (results ?? []).map((r) => ({
+        step: labels[r.label] ?? r.label,
+        count: r.count ?? 0,
+    }))
+}
+
+
 export function transformPages(results: any[], totalViews: number) {
     const grouped: Record<string, number> = {};
 

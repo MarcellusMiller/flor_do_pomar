@@ -1,6 +1,16 @@
 import { posthogQuery } from "./posthogClient.js";
-import { transformPages, transformReferrers, transformDaily, transformLanguages } from "./analyticsTransformer.js";
+import { 
+    transformPages, 
+    transformReferrers, 
+    transformDaily, 
+    transformLanguages,
+    transformDevices,
+    transformCountries,
+    transformCtaSources,
+    transformFunnel,
+} from "./analyticsTransformer.js";
 import { getSnapshot, getPreviousMonthPeriod } from "../../DB/repository/analyticsSnapshotRepository.js";
+
 
 export type TimeFilter = "7d" | "30d" | "3m" | "6m" | "12m";
 
@@ -31,6 +41,10 @@ export async function getAnalyticsData(period: TimeFilter) {
     abandonedData,
     avgDurationData,
     submittedData,
+    deviceData,    
+    countryData,     
+    ctaSourceData,   
+    funnelPagesData,
   ] = await Promise.all([
     posthogQuery({ kind: "TrendsQuery", series: [{ event: "$pageview", math: "total" }], dateRange: { date_from: dateFrom } }),
     posthogQuery({ kind: "TrendsQuery", series: [{ event: "$pageview", math: "dau" }], dateRange: { date_from: dateFrom } }),
@@ -41,6 +55,35 @@ export async function getAnalyticsData(period: TimeFilter) {
     posthogQuery({ kind: "TrendsQuery", series: [{ event: "contact_form_abandoned", math: "total" }], dateRange: { date_from: dateFrom } }),
     posthogQuery({ kind: "TrendsQuery", series: [{ event: "$pageview", math: "median", math_property: "$session_duration" }], dateRange: { date_from: dateFrom } }),
       posthogQuery({ kind: "TrendsQuery", series: [{ event: "contact_form_submitted", math: "total" }], dateRange: { date_from: dateFrom } }),
+   posthogQuery({ 
+        kind: "TrendsQuery", 
+        breakdownFilter: { breakdown: "$device_type", breakdown_type: "event" }, 
+        series: [{ event: "$pageview", math: "total" }], 
+        dateRange: { date_from: dateFrom } 
+    }),
+      posthogQuery({ 
+          kind: "TrendsQuery", 
+          breakdownFilter: { breakdown: "$geoip_country_name", breakdown_type: "event" }, 
+          series: [{ event: "$pageview", math: "total" }], 
+          dateRange: { date_from: dateFrom } 
+      }),
+      posthogQuery({ 
+          kind: "TrendsQuery", 
+          breakdownFilter: { breakdown: "source", breakdown_type: "event" }, 
+          series: [{ event: "contact_cta_clicked", math: "total" }], 
+          dateRange: { date_from: dateFrom } 
+      }),
+      posthogQuery({ 
+          kind: "TrendsQuery", 
+          series: [
+              { event: "wedding_planner_viewed", math: "total" },
+              { event: "portfolio_viewed", math: "total" },
+              { event: "about_viewed", math: "total" },
+              { event: "contact_cta_clicked", math: "total" },
+              { event: "contact_form_submitted", math: "total" },
+          ], 
+          dateRange: { date_from: dateFrom } 
+      }),
   ]);
 
   const totalViews = viewsData.results?.[0]?.count ?? 0;
@@ -89,5 +132,9 @@ export async function getAnalyticsData(period: TimeFilter) {
     languages: transformLanguages(pagesData.results), // 👈 reutiliza pagesData
     referrers: transformReferrers(referrersData.results),
     daily: transformDaily(dailyData.results),
-};
+    devices: transformDevices(deviceData.results),          // 👈 novo
+    countries: transformCountries(countryData.results),     // 👈 novo
+    ctaSources: transformCtaSources(ctaSourceData.results), // 👈 novo
+    funnel: transformFunnel(funnelPagesData.results),       // 👈 novo
+  };
 }
