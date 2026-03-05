@@ -2,7 +2,7 @@ export const clientEmailPTTemplate = (senderName: string, typeLabel: string) => 
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #f9f9f9; padding: 20px;">
         <div style="background-color: #ffffff; border-radius: 8px; padding: 40px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
             <div style="text-align: center; margin-bottom: 30px;">
-                <img src="cid:logo@flordopomar" alt="Logo Flor do Pomar" style="max-width: 150px; height: auto;" />
+                <img src="https://flordopomar.pt/assets/logo/logo.png" alt="Logo Flor do Pomar" style="max-width: 150px; height: auto;" />
             </div>
             <h2 style="color: #333; font-size: 20px;">Olá, ${senderName}!</h2>
             <p style="color: #555; line-height: 1.6;">
@@ -26,7 +26,7 @@ export const clientEmailENTemplate = (senderName: string, typeLabel: string) => 
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #f9f9f9; padding: 20px;">
         <div style="background-color: #ffffff; border-radius: 8px; padding: 40px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
             <div style="text-align: center; margin-bottom: 30px;">
-                <img src="cid:logo@flordopomar" alt="Logo Flor do Pomar" style="max-width: 150px; height: auto;" />
+                <img src="https://flordopomar.pt/assets/logo/logo.png" alt="Logo Flor do Pomar" style="max-width: 150px; height: auto;" />
             </div>
             <h2 style="color: #333; font-size: 20px;">Hello, ${senderName}!</h2>
             <p style="color: #555; line-height: 1.6;">

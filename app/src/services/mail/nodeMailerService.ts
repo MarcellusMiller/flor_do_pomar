@@ -6,16 +6,16 @@ dotenv.config();
 class nodeMailerService {
     private transporter: nodemailer.Transporter | null = null;
 
-    private logoAttachment = {
-        filename: "logo.png",
-        path: "/app/storage/logo/logo.png",
-        cid: "logo@flordopomar",
-        contentDisposition: "inline" as const,
-        encoding: "base64", 
-        headers: {
-            "Content-ID": "<logo@flordopomar>",
-        }
-    };
+    // private logoAttachment = {
+    //     filename: "logo.png",
+    //     path: "/app/storage/logo/logo.png",
+    //     cid: "logo@flordopomar",
+    //     contentDisposition: "inline" as const,
+    //     encoding: "base64", 
+    //     headers: {
+    //         "Content-ID": "<logo@flordopomar>",
+    //     }
+    // };
 
     async transport() {
         if (!this.transporter) {
@@ -40,7 +40,7 @@ class nodeMailerService {
             subject,
             text,
             html,
-            attachments: [this.logoAttachment]
+            // attachments: [this.logoAttachment]
         });
         console.log("Email enviado:", info.messageId);
         return info;
