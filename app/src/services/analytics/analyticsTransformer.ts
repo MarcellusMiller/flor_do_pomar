@@ -59,18 +59,41 @@ export function transformCountries(results: any[]) {
 export function transformCtaSources(results: any[]) {
     const sourceLabels: Record<string, string> = {
         sidebar: "Menu Lateral",
-        weedingPlanner: "Wedding Planner",
+        weedingPlanner: "Planeamento",
         "about-page": "Sobre Nós",
         decoration: "Decoração",
+        "decoration-page": "Decoração",
+        "home-page": "Página Inicial",
+        contact: "Contacto",
     }
-    const total = (results ?? []).reduce((acc, r) => acc + (r.count ?? 0), 0) || 1
 
-    return (results ?? [])
-        .sort((a, b) => b.count - a.count)
-        .map((r) => ({
-            source: sourceLabels[r.breakdown_value] ?? r.breakdown_value ?? "Desconhecido",
-            clicks: r.count ?? 0,
-            percentage: Math.round(((r.count ?? 0) / total) * 100),
+    const grouped: Record<string, number> = {}
+
+    ;(results ?? []).forEach((r) => {
+        // Remove /pt/ e /en/ do início
+        const raw = (r.breakdown_value ?? "")
+            .replace(/^\/(pt|en)\//, "")
+            .replace(/^\/(pt|en)$/, "home")
+
+        // Normaliza para label legível
+        const label = sourceLabels[raw] 
+            ?? raw
+                .replace(/-/g, " ")
+                .replace(/\//g, " ")
+                .trim()
+                .replace(/\b\w/g, (c: string) => c.toUpperCase())
+
+        grouped[label] = (grouped[label] ?? 0) + (r.count ?? 0)
+    })
+
+    const total = Object.values(grouped).reduce((acc, v) => acc + v, 0) || 1
+
+    return Object.entries(grouped)
+        .sort(([, a], [, b]) => b - a)
+        .map(([source, clicks]) => ({
+            source,
+            clicks,
+            percentage: Math.round((clicks / total) * 100),
         }))
 }
 
